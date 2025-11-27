@@ -8,9 +8,7 @@ class AudioManager {
     constructor() {
         this.audioContext = null;
         this.enabled = true;
-        this.bgMusicSource = null;
-        this.bgMusicBuffer = null;
-        this.bgMusicGain = null;
+        this.bgMusic = null;
     }
 
     /**
@@ -26,40 +24,25 @@ class AudioManager {
     }
 
     /**
-     * Start background music (using Web Audio API for seamless looping)
+     * Start background music
      */
-    async startBackgroundMusic() {
-        if (this.bgMusicSource) return; // Already playing
-        if (!this.audioContext) this.init();
+    startBackgroundMusic() {
+        if (this.bgMusic) return; // Already playing
 
-        try {
-            const response = await fetch('assets/audio/background-music.wav');
-            const arrayBuffer = await response.arrayBuffer();
-            this.bgMusicBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-
-            this.bgMusicSource = this.audioContext.createBufferSource();
-            this.bgMusicSource.buffer = this.bgMusicBuffer;
-            this.bgMusicSource.loop = true;
-
-            this.bgMusicGain = this.audioContext.createGain();
-            this.bgMusicGain.gain.value = 0.3;
-
-            this.bgMusicSource.connect(this.bgMusicGain);
-            this.bgMusicGain.connect(this.audioContext.destination);
-
-            this.bgMusicSource.start(0);
-        } catch (e) {
-            console.log('Background music failed:', e);
-        }
+        this.bgMusic = new Audio('assets/audio/background-music.wav');
+        this.bgMusic.loop = true;
+        this.bgMusic.volume = 0.3;
+        this.bgMusic.play().catch(e => console.log('Audio play failed:', e));
     }
 
     /**
      * Stop background music
      */
     stopBackgroundMusic() {
-        if (this.bgMusicSource) {
-            this.bgMusicSource.stop();
-            this.bgMusicSource = null;
+        if (this.bgMusic) {
+            this.bgMusic.pause();
+            this.bgMusic.currentTime = 0;
+            this.bgMusic = null;
         }
     }
 
