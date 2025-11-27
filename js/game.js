@@ -22,6 +22,7 @@ const CONFIG = {
 
     // Letter settings
     NUM_DECOY_LETTERS: 5,   // Number of wrong letters on screen
+    HEAD_BUFFER: 4,         // No letters spawn within X tiles of snake's head
 
     // Colors - ALL letters glow the same (no hints!)
     COLORS: {
@@ -365,6 +366,14 @@ function spawnLetters() {
     // Get occupied positions (snake body)
     const occupied = new Set(game.snake.map(s => `${s.x},${s.y}`));
 
+    // Add buffer zone around snake's head (no letters within X tiles)
+    const head = game.snake[0];
+    for (let dx = -CONFIG.HEAD_BUFFER; dx <= CONFIG.HEAD_BUFFER; dx++) {
+        for (let dy = -CONFIG.HEAD_BUFFER; dy <= CONFIG.HEAD_BUFFER; dy++) {
+            occupied.add(`${head.x + dx},${head.y + dy}`);
+        }
+    }
+
     // Get the next correct letter
     const correctLetter = game.currentAnimal.word[game.currentLetterIndex];
 
@@ -549,6 +558,19 @@ function render() {
 // =============================================
 
 function handleKeyDown(e) {
+    // Spacebar to start/restart when not running
+    if (e.key === ' ' && !game.isRunning) {
+        const startScreen = document.getElementById('start-screen');
+        const gameOverScreen = document.getElementById('game-over');
+
+        if (!startScreen.classList.contains('hidden')) {
+            startGame();
+        } else if (!gameOverScreen.classList.contains('hidden')) {
+            restartGame();
+        }
+        return;
+    }
+
     if (!game.isRunning) return;
 
     switch (e.key) {
