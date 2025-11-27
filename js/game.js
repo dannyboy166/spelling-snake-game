@@ -82,6 +82,12 @@ const game = {
     strikes: 0,
     maxStrikes: 3,
 
+    // Death animation
+    isDying: false,
+
+    // Wall mode: true = wrap around, false = walls kill
+    wrapAround: true,
+
     // Touch handling
     touchStartX: 0,
     touchStartY: 0
@@ -133,6 +139,31 @@ function setupEventListeners() {
 
     // Restart button
     document.getElementById('restart-btn').addEventListener('click', restartGame);
+
+    // Wall mode toggle buttons
+    document.getElementById('walls-wrap').addEventListener('click', () => {
+        game.wrapAround = true;
+        document.getElementById('walls-wrap').classList.add('active');
+        document.getElementById('walls-solid').classList.remove('active');
+    });
+    document.getElementById('walls-solid').addEventListener('click', () => {
+        game.wrapAround = false;
+        document.getElementById('walls-solid').classList.add('active');
+        document.getElementById('walls-wrap').classList.remove('active');
+    });
+
+    // Main menu button
+    document.getElementById('menu-btn').addEventListener('click', goToMainMenu);
+
+    // Color swatches
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.addEventListener('click', () => {
+            const color = swatch.dataset.color;
+            document.body.style.background = color;
+            document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+            swatch.classList.add('active');
+        });
+    });
 
     // Prevent arrow key scrolling
     window.addEventListener('keydown', (e) => {
@@ -205,12 +236,35 @@ function restartGame() {
     startGame();
 }
 
+function goToMainMenu() {
+    document.getElementById('game-over').classList.add('hidden');
+    document.getElementById('start-screen').classList.remove('hidden');
+    game.letters = [];
+    render();
+}
+
 function gameOver() {
     game.isRunning = false;
     clearInterval(game.gameLoop);
 
     audioManager.playGameOver();
 
+    // Start death animation
+    game.isDying = true;
+    let flashes = 0;
+    const maxFlashes = 6;
+    const flashInterval = setInterval(() => {
+        flashes++;
+        render();  // render() will check isDying and alternate colors
+        if (flashes >= maxFlashes) {
+            clearInterval(flashInterval);
+            game.isDying = false;
+            showGameOverScreen();
+        }
+    }, 250);
+}
+
+function showGameOverScreen() {
     // Update final score display
     document.getElementById('final-score').textContent = game.score;
     document.getElementById('animals-spelled').textContent = game.animalsSpelled;
@@ -293,11 +347,19 @@ function gameStep() {
         y: head.y + game.direction.y
     };
 
-    // Check wall collision
+    // Handle wall collision
     if (newHead.x < 0 || newHead.x >= CONFIG.GRID_WIDTH ||
         newHead.y < 0 || newHead.y >= CONFIG.GRID_HEIGHT) {
-        gameOver();
-        return;
+        if (game.wrapAround) {
+            // Wrap to other side
+            if (newHead.x < 0) newHead.x = CONFIG.GRID_WIDTH - 1;
+            if (newHead.x >= CONFIG.GRID_WIDTH) newHead.x = 0;
+            if (newHead.y < 0) newHead.y = CONFIG.GRID_HEIGHT - 1;
+            if (newHead.y >= CONFIG.GRID_HEIGHT) newHead.y = 0;
+        } else {
+            gameOver();
+            return;
+        }
     }
 
     // Check self collision
@@ -480,6 +542,9 @@ function render() {
         ctx.fillText(letter.char, x + gridSize / 2, y + gridSize / 2 + 1);
     });
 
+    // Determine if snake should flash red (death animation)
+    const deathFlashRed = game.isDying && (Math.floor(Date.now() / 250) % 2 === 0);
+
     // Draw snake
     game.snake.forEach((segment, index) => {
         const x = segment.x * gridSize;
@@ -491,8 +556,13 @@ function render() {
         const centerX = x + gridSize / 2;
         const centerY = y + gridSize / 2;
 
-        // Gradient for 3D effect
-        if (isHead) {
+        // Gradient for 3D effect (or red if dying)
+        if (deathFlashRed) {
+            // Flash red during death
+            ctx.fillStyle = '#ef4444';
+            ctx.shadowColor = '#ef4444';
+            ctx.shadowBlur = 12;
+        } else if (isHead) {
             // Head is slightly larger and brighter
             ctx.fillStyle = CONFIG.COLORS.snakeHead;
             ctx.shadowColor = CONFIG.COLORS.snakeHead;
@@ -512,12 +582,12 @@ function render() {
         ctx.shadowBlur = 0;
 
         // Add outline
-        ctx.strokeStyle = CONFIG.COLORS.snakeOutline;
+        ctx.strokeStyle = deathFlashRed ? '#b91c1c' : CONFIG.COLORS.snakeOutline;
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        // Draw eyes on head
-        if (isHead) {
+        // Draw eyes on head (not during death flash)
+        if (isHead && !deathFlashRed) {
             const eyeOffset = 4;
             const eyeRadius = 3;
 

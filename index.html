@@ -57,7 +57,28 @@
                     <p>🔤 Find the <span class="highlight">correct letters</span> in order</p>
                     <p>⬆️ Use <span class="highlight">arrow keys</span> or <span class="highlight">swipe</span> to move</p>
                     <p>🐍 Your snake <span class="highlight">grows longer</span> with each word!</p>
-                    <p>⚠️ Don't hit the walls or yourself!</p>
+                </div>
+                <div class="wall-mode-toggle">
+                    <span class="toggle-label">Walls:</span>
+                    <button class="toggle-btn active" id="walls-wrap">Wrap Around</button>
+                    <button class="toggle-btn" id="walls-solid">Solid (Hard)</button>
+                </div>
+                <div class="color-selector">
+                    <span class="toggle-label">Background:</span>
+                    <div class="color-swatches" id="color-swatches">
+                        <button class="color-swatch active" data-color="#1a1a2e" style="background: #1a1a2e;" title="Default Purple"></button>
+                        <button class="color-swatch" data-color="#a7f0f5" style="background: #a7f0f5;" title="Cyan"></button>
+                        <button class="color-swatch" data-color="#b0acf1" style="background: #b0acf1;" title="Soft Purple"></button>
+                        <button class="color-swatch" data-color="#7ab9f1" style="background: #7ab9f1;" title="Sky Blue"></button>
+                        <button class="color-swatch" data-color="#f4ef7d" style="background: #f4ef7d;" title="Yellow"></button>
+                        <button class="color-swatch" data-color="#cef577" style="background: #cef577;" title="Lime Green"></button>
+                        <button class="color-swatch" data-color="#f2a7d0" style="background: #f2a7d0;" title="Light Pink"></button>
+                        <button class="color-swatch" data-color="#72a4de" style="background: #72a4de;" title="Medium Blue"></button>
+                        <button class="color-swatch" data-color="#d793fa" style="background: #d793fa;" title="Light Purple"></button>
+                        <button class="color-swatch" data-color="#bee9c3" style="background: #bee9c3;" title="Mint Green"></button>
+                        <button class="color-swatch" data-color="#ee836b" style="background: #ee836b;" title="Coral"></button>
+                        <button class="color-swatch" data-color="#e56bbf" style="background: #e56bbf;" title="Bright Pink"></button>
+                    </div>
                 </div>
                 <button class="start-btn" id="start-btn">Start Game!</button>
             </div>
@@ -69,7 +90,10 @@
                 <h2>Game Over!</h2>
                 <p>Final Score: <span id="final-score">0</span></p>
                 <p>Animals Spelled: <span id="animals-spelled">0</span></p>
-                <button class="start-btn" id="restart-btn">Play Again!</button>
+                <div class="game-over-buttons">
+                    <button class="start-btn" id="restart-btn">Play Again!</button>
+                    <button class="menu-btn" id="menu-btn">Main Menu</button>
+                </div>
             </div>
         </div>
     </div>
