@@ -614,17 +614,21 @@ body {
     }
 
     .animal-emoji {
-        font-size: 36px;
+        font-size: 72px;
     }
 
     .letter-box {
-        width: 32px;
-        height: 38px;
-        font-size: 20px;
+        width: 38px;
+        height: 46px;
+        font-size: 24px;
+    }
+
+    .strike-icon {
+        font-size: 29px;
     }
 
     .score-value {
-        font-size: 22px;
+        font-size: 36px;
     }
 
     .overlay-content h1 {
