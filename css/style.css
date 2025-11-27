@@ -584,8 +584,27 @@ body {
     }
 
     .game-header {
+        flex-wrap: wrap;
         padding: 8px 10px;
-        gap: 10px;
+        gap: 8px;
+    }
+
+    .animal-display {
+        order: 1;
+    }
+
+    .strikes-display {
+        order: 2;
+    }
+
+    .score-display {
+        order: 3;
+    }
+
+    .word-display {
+        order: 4;
+        width: 100%;
+        flex: none;
     }
 
     .animal-emoji {
