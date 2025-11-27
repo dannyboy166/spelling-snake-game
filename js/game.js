@@ -532,7 +532,15 @@ function gameStep() {
         const letter = game.letters[letterIndex];
         const nextLetter = game.currentAnimal.word[game.currentLetterIndex];
 
-        if (letter.char === nextLetter) {
+        if (letter.isHeart) {
+            // Heart pickup - restore a life!
+            game.snake.pop(); // Don't grow from heart
+            game.strikes = Math.max(0, game.strikes - 1);
+            audioManager.playCorrectLetter(); // Happy sound
+            updateStrikesDisplay();
+            // Remove the heart from letters
+            game.letters.splice(letterIndex, 1);
+        } else if (letter.char === nextLetter) {
             // Correct letter!
             audioManager.playCorrectLetter();
             game.score += 10;
@@ -625,6 +633,19 @@ function spawnLetters() {
             occupied.add(`${pos.x},${pos.y}`);
         }
     }
+
+    // Spawn heart pickup (30% chance, only if player has less than 3 lives)
+    if (game.strikes > 0 && Math.random() < 0.3) {
+        const heartPos = getRandomEmptyPosition(occupied);
+        if (heartPos) {
+            game.letters.push({
+                x: heartPos.x,
+                y: heartPos.y,
+                char: '❤️',
+                isHeart: true
+            });
+        }
+    }
 }
 
 function getRandomEmptyPosition(occupied) {
@@ -669,29 +690,49 @@ function render() {
         ctx.stroke();
     }
 
-    // Draw letters - ALL letters look the same (no hints!)
+    // Draw letters and hearts
     game.letters.forEach(letter => {
         const x = letter.x * gridSize;
         const y = letter.y * gridSize;
 
-        // All letters glow equally - kids must figure out the spelling!
-        ctx.shadowColor = CONFIG.COLORS.letterGlow;
-        ctx.shadowBlur = 12 * game.scale;
+        if (letter.isHeart) {
+            // Draw heart pickup with pink/red glow
+            ctx.shadowColor = '#ff6b6b';
+            ctx.shadowBlur = 15 * game.scale;
 
-        // Background circle
-        ctx.fillStyle = CONFIG.COLORS.letterBg;
-        ctx.beginPath();
-        ctx.arc(x + gridSize / 2, y + gridSize / 2, gridSize / 2 - 2 * game.scale, 0, Math.PI * 2);
-        ctx.fill();
+            // Pink background circle
+            ctx.fillStyle = '#ff4757';
+            ctx.beginPath();
+            ctx.arc(x + gridSize / 2, y + gridSize / 2, gridSize / 2 - 2 * game.scale, 0, Math.PI * 2);
+            ctx.fill();
 
-        ctx.shadowBlur = 0;
+            ctx.shadowBlur = 0;
 
-        // Letter text
-        ctx.fillStyle = CONFIG.COLORS.letterText;
-        ctx.font = `bold ${Math.floor(gridSize * 0.7)}px Fredoka`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(letter.char, x + gridSize / 2, y + gridSize / 2);
+            // Heart emoji
+            ctx.font = `${Math.floor(gridSize * 0.6)}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('❤️', x + gridSize / 2, y + gridSize / 2);
+        } else {
+            // All letters glow equally - kids must figure out the spelling!
+            ctx.shadowColor = CONFIG.COLORS.letterGlow;
+            ctx.shadowBlur = 12 * game.scale;
+
+            // Background circle
+            ctx.fillStyle = CONFIG.COLORS.letterBg;
+            ctx.beginPath();
+            ctx.arc(x + gridSize / 2, y + gridSize / 2, gridSize / 2 - 2 * game.scale, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+
+            // Letter text
+            ctx.fillStyle = CONFIG.COLORS.letterText;
+            ctx.font = `bold ${Math.floor(gridSize * 0.7)}px Fredoka`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(letter.char, x + gridSize / 2, y + gridSize / 2);
+        }
     });
 
     // Determine if snake should flash red (death animation)
