@@ -139,6 +139,9 @@ const game = {
     // Current color theme
     currentTheme: 'default',
 
+    // Canvas scale for responsive sizing
+    scale: 1,
+
     // Touch handling
     touchStartX: 0,
     touchStartY: 0
@@ -153,9 +156,9 @@ function init() {
     game.canvas = document.getElementById('game-canvas');
     game.ctx = game.canvas.getContext('2d');
 
-    // Set canvas size
-    game.canvas.width = CONFIG.GRID_SIZE * CONFIG.GRID_WIDTH;
-    game.canvas.height = CONFIG.GRID_SIZE * CONFIG.GRID_HEIGHT;
+    // Set canvas size (responsive)
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
     // Set up event listeners
     setupEventListeners();
@@ -165,6 +168,27 @@ function init() {
 
     // Initial render
     render();
+}
+
+function resizeCanvas() {
+    const container = document.querySelector('.game-container');
+    const maxWidth = Math.min(container.offsetWidth - 40, CONFIG.GRID_SIZE * CONFIG.GRID_WIDTH);
+
+    // Calculate scale factor
+    const baseWidth = CONFIG.GRID_SIZE * CONFIG.GRID_WIDTH;
+    const scale = maxWidth / baseWidth;
+
+    // Store scale for rendering
+    game.scale = Math.min(scale, 1); // Never scale up, only down
+
+    // Set canvas size
+    game.canvas.width = Math.floor(CONFIG.GRID_WIDTH * CONFIG.GRID_SIZE * game.scale);
+    game.canvas.height = Math.floor(CONFIG.GRID_HEIGHT * CONFIG.GRID_SIZE * game.scale);
+
+    // Re-render if game exists
+    if (game.ctx) {
+        render();
+    }
 }
 
 function setupEventListeners() {
@@ -587,7 +611,7 @@ function getRandomEmptyPosition(occupied) {
 
 function render() {
     const ctx = game.ctx;
-    const gridSize = CONFIG.GRID_SIZE;
+    const gridSize = CONFIG.GRID_SIZE * game.scale;
 
     // Clear canvas
     ctx.fillStyle = CONFIG.COLORS.background;
@@ -595,7 +619,7 @@ function render() {
 
     // Draw subtle grid
     ctx.strokeStyle = CONFIG.COLORS.gridLines;
-    ctx.lineWidth = 0.5;
+    ctx.lineWidth = 0.5 * game.scale;
     for (let x = 0; x <= CONFIG.GRID_WIDTH; x++) {
         ctx.beginPath();
         ctx.moveTo(x * gridSize, 0);
@@ -616,22 +640,22 @@ function render() {
 
         // All letters glow equally - kids must figure out the spelling!
         ctx.shadowColor = CONFIG.COLORS.letterGlow;
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 12 * game.scale;
 
         // Background circle
         ctx.fillStyle = CONFIG.COLORS.letterBg;
         ctx.beginPath();
-        ctx.arc(x + gridSize / 2, y + gridSize / 2, gridSize / 2 - 2, 0, Math.PI * 2);
+        ctx.arc(x + gridSize / 2, y + gridSize / 2, gridSize / 2 - 2 * game.scale, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.shadowBlur = 0;
 
         // Letter text
         ctx.fillStyle = CONFIG.COLORS.letterText;
-        ctx.font = `bold ${gridSize - 8}px Fredoka`;
+        ctx.font = `bold ${gridSize - 8 * game.scale}px Fredoka`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(letter.char, x + gridSize / 2, y + gridSize / 2 + 1);
+        ctx.fillText(letter.char, x + gridSize / 2, y + gridSize / 2 + 1 * game.scale);
     });
 
     // Determine if snake should flash red (death animation)
@@ -644,7 +668,7 @@ function render() {
         const isHead = index === 0;
 
         // Snake body with rounded corners
-        const radius = gridSize / 2 - 1;
+        const radius = gridSize / 2 - 1 * game.scale;
         const centerX = x + gridSize / 2;
         const centerY = y + gridSize / 2;
 
@@ -653,12 +677,12 @@ function render() {
             // Flash red during death
             ctx.fillStyle = '#ef4444';
             ctx.shadowColor = '#ef4444';
-            ctx.shadowBlur = 12;
+            ctx.shadowBlur = 12 * game.scale;
         } else if (isHead) {
             // Head is slightly larger and brighter
             ctx.fillStyle = CONFIG.COLORS.snakeHead;
             ctx.shadowColor = CONFIG.COLORS.snakeHead;
-            ctx.shadowBlur = 8;
+            ctx.shadowBlur = 8 * game.scale;
         } else {
             // Body segments get slightly darker toward tail
             const brightness = 1 - (index / game.snake.length) * 0.3;
@@ -680,29 +704,31 @@ function render() {
 
         // Add outline
         ctx.strokeStyle = deathFlashRed ? '#b91c1c' : CONFIG.COLORS.snakeOutline;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2 * game.scale;
         ctx.stroke();
 
         // Draw eyes on head (not during death flash)
         if (isHead && !deathFlashRed) {
-            const eyeOffset = 4;
-            const eyeRadius = 3;
+            const eyeOffset = 4 * game.scale;
+            const eyeRadius = 3 * game.scale;
+            const eyeInset = 3 * game.scale;
+            const pupilRadius = 1.5 * game.scale;
 
             // Position eyes based on direction
             let eye1X, eye1Y, eye2X, eye2Y;
 
             if (game.direction.x === 1) { // Right
-                eye1X = centerX + 3; eye1Y = centerY - eyeOffset;
-                eye2X = centerX + 3; eye2Y = centerY + eyeOffset;
+                eye1X = centerX + eyeInset; eye1Y = centerY - eyeOffset;
+                eye2X = centerX + eyeInset; eye2Y = centerY + eyeOffset;
             } else if (game.direction.x === -1) { // Left
-                eye1X = centerX - 3; eye1Y = centerY - eyeOffset;
-                eye2X = centerX - 3; eye2Y = centerY + eyeOffset;
+                eye1X = centerX - eyeInset; eye1Y = centerY - eyeOffset;
+                eye2X = centerX - eyeInset; eye2Y = centerY + eyeOffset;
             } else if (game.direction.y === -1) { // Up
-                eye1X = centerX - eyeOffset; eye1Y = centerY - 3;
-                eye2X = centerX + eyeOffset; eye2Y = centerY - 3;
+                eye1X = centerX - eyeOffset; eye1Y = centerY - eyeInset;
+                eye2X = centerX + eyeOffset; eye2Y = centerY - eyeInset;
             } else { // Down
-                eye1X = centerX - eyeOffset; eye1Y = centerY + 3;
-                eye2X = centerX + eyeOffset; eye2Y = centerY + 3;
+                eye1X = centerX - eyeOffset; eye1Y = centerY + eyeInset;
+                eye2X = centerX + eyeOffset; eye2Y = centerY + eyeInset;
             }
 
             // White of eyes
@@ -715,8 +741,8 @@ function render() {
             // Pupils
             ctx.fillStyle = '#1a1a2e';
             ctx.beginPath();
-            ctx.arc(eye1X + game.direction.x, eye1Y + game.direction.y, 1.5, 0, Math.PI * 2);
-            ctx.arc(eye2X + game.direction.x, eye2Y + game.direction.y, 1.5, 0, Math.PI * 2);
+            ctx.arc(eye1X + game.direction.x * game.scale, eye1Y + game.direction.y * game.scale, pupilRadius, 0, Math.PI * 2);
+            ctx.arc(eye2X + game.direction.x * game.scale, eye2Y + game.direction.y * game.scale, pupilRadius, 0, Math.PI * 2);
             ctx.fill();
         }
     });
