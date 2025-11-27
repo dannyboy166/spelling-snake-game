@@ -89,20 +89,13 @@ function getAnimalsByDifficulty(maxLength) {
  * @returns {Object} Random animal object
  */
 function getRandomAnimal(excludeWords = [], maxLength = 9) {
-    // TESTING: Force 5-letter words only
-    const testMode = true;
-    const testLength = 5;
-
     const available = ANIMALS.filter(
-        animal => !excludeWords.includes(animal.word) &&
-        (testMode ? animal.word.length === testLength : animal.word.length <= maxLength)
+        animal => !excludeWords.includes(animal.word) && animal.word.length <= maxLength
     );
 
     // If all animals used, reset but keep difficulty
     if (available.length === 0) {
-        const filtered = ANIMALS.filter(animal =>
-            testMode ? animal.word.length === testLength : animal.word.length <= maxLength
-        );
+        const filtered = ANIMALS.filter(animal => animal.word.length <= maxLength);
         return filtered[Math.floor(Math.random() * filtered.length)];
     }
 
