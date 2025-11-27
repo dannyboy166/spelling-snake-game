@@ -325,6 +325,18 @@ body {
     color: #ccc;
 }
 
+.word-was {
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.word-reveal {
+    color: #ef4444;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 2px;
+}
+
 .instructions {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 12px;

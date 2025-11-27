@@ -426,6 +426,9 @@ function showGameOverScreen() {
         box.classList.add('missed-final');
     });
 
+    // Show the word they were trying to spell
+    document.getElementById('word-was').textContent = game.currentAnimal.word;
+
     // Update final score display
     document.getElementById('final-score').textContent = game.score;
     document.getElementById('animals-spelled').textContent = game.animalsSpelled;
