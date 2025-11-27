@@ -51,36 +51,36 @@ const CONFIG = {
         },
         neon: {
             name: 'Neon Pop',
-            background: '#b0acf1',
-            gridLines: '#9d99e0',
-            snakeHead: '#e56bbf',
-            snakeBody: '#d44fa8',
-            snakeOutline: '#a33d82',
-            letterBg: '#cef577',
-            letterGlow: '#e0ff99',
-            letterText: '#1a1a2e'
+            background: '#e56bbf',
+            gridLines: '#d45aae',
+            snakeHead: '#e1fd70',
+            snakeBody: '#d4f060',
+            snakeOutline: '#a8c44a',
+            letterBg: '#7a64ec',
+            letterGlow: '#9580ff',
+            letterText: '#ffffff'
         },
         ocean: {
             name: 'Ocean',
-            background: '#72a4de',
-            gridLines: '#5a8fcf',
-            snakeHead: '#a7f0f5',
-            snakeBody: '#7ee0e8',
-            snakeOutline: '#4ab8c2',
-            letterBg: '#ee836b',
-            letterGlow: '#ff9a85',
+            background: '#b7eef4',
+            gridLines: '#a0e0e8',
+            snakeHead: '#7a64ec',
+            snakeBody: '#6b55dd',
+            snakeOutline: '#5040b0',
+            letterBg: '#f5ef8d',
+            letterGlow: '#fffaaa',
             letterText: '#1a1a2e'
         },
         sunset: {
             name: 'Sunset',
-            background: '#d793fa',
-            gridLines: '#c77eeb',
+            background: '#f2a7d0',
+            gridLines: '#e896c0',
             snakeHead: '#f4ef7d',
             snakeBody: '#e8e36a',
             snakeOutline: '#c9c44d',
-            letterBg: '#f2a7d0',
-            letterGlow: '#ffbde0',
-            letterText: '#1a1a2e'
+            letterBg: '#7a64ec',
+            letterGlow: '#9580ff',
+            letterText: '#ffffff'
         }
     },
 
@@ -159,6 +159,9 @@ function init() {
 
     // Set up event listeners
     setupEventListeners();
+
+    // Show page background selector on start screen
+    document.getElementById('page-bg-selector').classList.add('visible');
 
     // Initial render
     render();
@@ -281,8 +284,9 @@ function startGame() {
     updateScoreDisplay();
     updateStrikesDisplay();
 
-    // Hide start screen
+    // Hide start screen and page background selector
     document.getElementById('start-screen').classList.add('hidden');
+    document.getElementById('page-bg-selector').classList.remove('visible');
 
     // Start first level (with snake reset)
     startLevel(true);
@@ -326,6 +330,7 @@ function restartGame() {
 function goToMainMenu() {
     document.getElementById('game-over').classList.add('hidden');
     document.getElementById('start-screen').classList.remove('hidden');
+    document.getElementById('page-bg-selector').classList.add('visible');
     game.letters = [];
     render();
 }

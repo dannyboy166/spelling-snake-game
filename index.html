@@ -11,6 +11,25 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
+    <!-- Page background color selector (top left of screen) -->
+    <div class="color-selector-corner" id="page-bg-selector">
+        <span class="toggle-label">Page Background:</span>
+        <div class="color-swatches" id="color-swatches">
+            <button class="color-swatch active" data-color="#1a1a2e" style="background: #1a1a2e;" title="Default Purple"></button>
+            <button class="color-swatch" data-color="#a7f0f5" style="background: #a7f0f5;" title="Cyan"></button>
+            <button class="color-swatch" data-color="#b0acf1" style="background: #b0acf1;" title="Soft Purple"></button>
+            <button class="color-swatch" data-color="#7ab9f1" style="background: #7ab9f1;" title="Sky Blue"></button>
+            <button class="color-swatch" data-color="#f4ef7d" style="background: #f4ef7d;" title="Yellow"></button>
+            <button class="color-swatch" data-color="#cef577" style="background: #cef577;" title="Lime Green"></button>
+            <button class="color-swatch" data-color="#f2a7d0" style="background: #f2a7d0;" title="Light Pink"></button>
+            <button class="color-swatch" data-color="#72a4de" style="background: #72a4de;" title="Medium Blue"></button>
+            <button class="color-swatch" data-color="#d793fa" style="background: #d793fa;" title="Light Purple"></button>
+            <button class="color-swatch" data-color="#bee9c3" style="background: #bee9c3;" title="Mint Green"></button>
+            <button class="color-swatch" data-color="#ee836b" style="background: #ee836b;" title="Coral"></button>
+            <button class="color-swatch" data-color="#e56bbf" style="background: #e56bbf;" title="Bright Pink"></button>
+        </div>
+    </div>
+
     <div class="game-container">
         <!-- Header with animal and word progress -->
         <div class="game-header">
@@ -51,68 +70,53 @@
         <div class="overlay" id="start-screen">
             <div class="overlay-content">
                 <h1>🐍 Spelling Snake 🐍</h1>
-                <p>Collect letters to spell animal names!</p>
-                <div class="instructions">
-                    <p>🐱 Look at the <span class="highlight">animal picture</span> and spell its name</p>
-                    <p>🔤 Find the <span class="highlight">correct letters</span> in order</p>
-                    <p>⬆️ Use <span class="highlight">arrow keys</span> or <span class="highlight">swipe</span> to move</p>
-                    <p>🐍 Your snake <span class="highlight">grows longer</span> with each word!</p>
+                <p class="subtitle">Collect letters to spell animal names!</p>
+
+                <div class="instructions-compact">
+                    <span>🐱 Spell the <span class="highlight">animal name</span></span>
+                    <span>⬆️ <span class="highlight">Arrow keys</span> or <span class="highlight">swipe</span></span>
+                    <span>🐍 Snake <span class="highlight">grows longer</span>!</span>
                 </div>
-                <div class="wall-mode-toggle">
-                    <span class="toggle-label">Walls:</span>
-                    <button class="toggle-btn active" id="walls-wrap">Wrap Around</button>
-                    <button class="toggle-btn" id="walls-solid">Solid (Hard)</button>
-                </div>
-                <div class="color-selector">
-                    <span class="toggle-label">Page Background:</span>
-                    <div class="color-swatches" id="color-swatches">
-                        <button class="color-swatch active" data-color="#1a1a2e" style="background: #1a1a2e;" title="Default Purple"></button>
-                        <button class="color-swatch" data-color="#a7f0f5" style="background: #a7f0f5;" title="Cyan"></button>
-                        <button class="color-swatch" data-color="#b0acf1" style="background: #b0acf1;" title="Soft Purple"></button>
-                        <button class="color-swatch" data-color="#7ab9f1" style="background: #7ab9f1;" title="Sky Blue"></button>
-                        <button class="color-swatch" data-color="#f4ef7d" style="background: #f4ef7d;" title="Yellow"></button>
-                        <button class="color-swatch" data-color="#cef577" style="background: #cef577;" title="Lime Green"></button>
-                        <button class="color-swatch" data-color="#f2a7d0" style="background: #f2a7d0;" title="Light Pink"></button>
-                        <button class="color-swatch" data-color="#72a4de" style="background: #72a4de;" title="Medium Blue"></button>
-                        <button class="color-swatch" data-color="#d793fa" style="background: #d793fa;" title="Light Purple"></button>
-                        <button class="color-swatch" data-color="#bee9c3" style="background: #bee9c3;" title="Mint Green"></button>
-                        <button class="color-swatch" data-color="#ee836b" style="background: #ee836b;" title="Coral"></button>
-                        <button class="color-swatch" data-color="#e56bbf" style="background: #e56bbf;" title="Bright Pink"></button>
+
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <span class="setting-label">Walls</span>
+                        <div class="setting-options">
+                            <button class="toggle-btn active" id="walls-wrap">Wrap</button>
+                            <button class="toggle-btn" id="walls-solid">Solid</button>
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        <span class="setting-label">Theme</span>
+                        <div class="theme-buttons" id="theme-buttons">
+                            <button class="theme-btn active" data-theme="default" title="Classic">
+                                <span class="theme-preview" style="background: #16213e;">
+                                    <span class="preview-snake" style="background: #4ade80;"></span>
+                                    <span class="preview-letter" style="background: #fbbf24;"></span>
+                                </span>
+                            </button>
+                            <button class="theme-btn" data-theme="neon" title="Neon Pop">
+                                <span class="theme-preview" style="background: #e56bbf;">
+                                    <span class="preview-snake" style="background: #e1fd70;"></span>
+                                    <span class="preview-letter" style="background: #7a64ec;"></span>
+                                </span>
+                            </button>
+                            <button class="theme-btn" data-theme="ocean" title="Ocean">
+                                <span class="theme-preview" style="background: #b7eef4;">
+                                    <span class="preview-snake" style="background: #7a64ec;"></span>
+                                    <span class="preview-letter" style="background: #f5ef8d;"></span>
+                                </span>
+                            </button>
+                            <button class="theme-btn" data-theme="sunset" title="Sunset">
+                                <span class="theme-preview" style="background: #f2a7d0;">
+                                    <span class="preview-snake" style="background: #f4ef7d;"></span>
+                                    <span class="preview-letter" style="background: #7a64ec;"></span>
+                                </span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="theme-selector">
-                    <span class="toggle-label">Game Theme:</span>
-                    <div class="theme-buttons" id="theme-buttons">
-                        <button class="theme-btn active" data-theme="default">
-                            <span class="theme-preview">
-                                <span class="preview-snake" style="background: #4ade80;"></span>
-                                <span class="preview-letter" style="background: #fbbf24;"></span>
-                            </span>
-                            <span class="theme-name">Classic</span>
-                        </button>
-                        <button class="theme-btn" data-theme="neon">
-                            <span class="theme-preview">
-                                <span class="preview-snake" style="background: #e56bbf;"></span>
-                                <span class="preview-letter" style="background: #cef577;"></span>
-                            </span>
-                            <span class="theme-name">Neon Pop</span>
-                        </button>
-                        <button class="theme-btn" data-theme="ocean">
-                            <span class="theme-preview">
-                                <span class="preview-snake" style="background: #a7f0f5;"></span>
-                                <span class="preview-letter" style="background: #ee836b;"></span>
-                            </span>
-                            <span class="theme-name">Ocean</span>
-                        </button>
-                        <button class="theme-btn" data-theme="sunset">
-                            <span class="theme-preview">
-                                <span class="preview-snake" style="background: #f4ef7d;"></span>
-                                <span class="preview-letter" style="background: #f2a7d0;"></span>
-                            </span>
-                            <span class="theme-name">Sunset</span>
-                        </button>
-                    </div>
-                </div>
+
                 <button class="start-btn" id="start-btn">Start Game!</button>
             </div>
         </div>
