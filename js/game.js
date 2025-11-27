@@ -708,11 +708,12 @@ function render() {
 
             ctx.shadowBlur = 0;
 
-            // Heart emoji
-            ctx.font = `${Math.floor(gridSize * 0.6)}px sans-serif`;
+            // Heart emoji (+ symbol instead for better centering)
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${Math.floor(gridSize * 0.5)}px sans-serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('❤️', x + gridSize / 2, y + gridSize / 2);
+            ctx.fillText('+', x + gridSize / 2, y + gridSize / 2);
         } else {
             // All letters glow equally - kids must figure out the spelling!
             ctx.shadowColor = CONFIG.COLORS.letterGlow;
