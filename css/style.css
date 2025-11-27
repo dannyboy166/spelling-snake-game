@@ -595,6 +595,8 @@ body {
 
     .strikes-display {
         order: 2;
+        flex: 1;
+        justify-content: center;
     }
 
     .score-display {
@@ -615,10 +617,6 @@ body {
         width: 32px;
         height: 38px;
         font-size: 20px;
-    }
-
-    .strike-icon {
-        font-size: 24px;
     }
 
     .score-value {
@@ -661,9 +659,5 @@ body {
 
     .animal-emoji {
         font-size: 30px;
-    }
-
-    .strike-icon {
-        font-size: 20px;
     }
 }
