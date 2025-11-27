@@ -598,6 +598,10 @@ body {
         font-size: 20px;
     }
 
+    .strike-icon {
+        font-size: 24px;
+    }
+
     .score-value {
         font-size: 22px;
     }
@@ -620,6 +624,11 @@ body {
     .touch-row {
         gap: 50px;
     }
+
+    .settings-grid {
+        flex-direction: column;
+        gap: 15px;
+    }
 }
 
 /* Extra small screens */
@@ -633,5 +642,9 @@ body {
 
     .animal-emoji {
         font-size: 30px;
+    }
+
+    .strike-icon {
+        font-size: 20px;
     }
 }
