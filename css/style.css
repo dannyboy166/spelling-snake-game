@@ -613,6 +613,16 @@ body {
         gap: 15px;
     }
 
+    /* Horizontal layout for all settings on mobile */
+    .setting-group {
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .setting-header {
+        flex-direction: row;
+    }
+
     .game-header {
         display: grid;
         grid-template-columns: auto 1fr auto;
