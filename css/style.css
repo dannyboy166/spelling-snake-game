@@ -391,8 +391,8 @@ body {
     top: 15px;
     left: 15px;
     display: none;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     gap: 8px;
     z-index: 200;
 }
@@ -413,6 +413,22 @@ body {
 .color-selector-corner .color-swatch {
     width: 24px;
     height: 24px;
+}
+
+/* Selected color indicator (for mobile collapsed view) */
+.selected-color-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    display: none;
+}
+
+.color-swatches-wrapper {
+    display: flex;
+    gap: 5px;
 }
 
 .color-swatches {
@@ -576,11 +592,41 @@ body {
 @media (max-width: 500px) {
     body {
         padding: 5px;
+        padding-top: 50px;
     }
 
     .game-container {
         padding: 10px;
         border-radius: 15px;
+    }
+
+    /* Collapsible color picker on mobile */
+    .color-selector-corner {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .color-selector-corner .toggle-label {
+        font-size: 11px;
+    }
+
+    .selected-color-btn {
+        display: block;
+    }
+
+    .color-selector-corner .color-swatches {
+        display: none;
+        position: absolute;
+        top: 40px;
+        left: 0;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 10px;
+        border-radius: 10px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .color-selector-corner.expanded .color-swatches {
+        display: grid;
     }
 
     .game-header {

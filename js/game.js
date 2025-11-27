@@ -246,7 +246,16 @@ function setupEventListeners() {
             document.body.style.background = color;
             document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
             swatch.classList.add('active');
+            // Update selected color button
+            document.getElementById('selected-color-btn').style.background = color;
+            // Collapse on mobile after selection
+            document.getElementById('page-bg-selector').classList.remove('expanded');
         });
+    });
+
+    // Selected color button (mobile toggle)
+    document.getElementById('selected-color-btn').addEventListener('click', () => {
+        document.getElementById('page-bg-selector').classList.toggle('expanded');
     });
 
     // Theme buttons
