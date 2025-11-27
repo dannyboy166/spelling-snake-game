@@ -166,9 +166,6 @@ function init() {
     // Set up event listeners
     setupEventListeners();
 
-    // Show page background selector on start screen
-    document.getElementById('page-bg-selector').classList.add('visible');
-
     // Initial render
     render();
 }
@@ -240,32 +237,56 @@ function setupEventListeners() {
     document.getElementById('menu-btn').addEventListener('click', goToMainMenu);
 
     // Color swatches
-    document.querySelectorAll('.color-swatch').forEach(swatch => {
-        swatch.addEventListener('click', () => {
+    document.querySelectorAll('#color-swatches .color-swatch').forEach(swatch => {
+        swatch.addEventListener('click', (e) => {
+            e.stopPropagation();
             const color = swatch.dataset.color;
             document.body.style.background = color;
             document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
             swatch.classList.add('active');
             // Update selected color button
             document.getElementById('selected-color-btn').style.background = color;
-            // Collapse on mobile after selection
-            document.getElementById('page-bg-selector').classList.remove('expanded');
+            // Collapse after selection
+            document.getElementById('bg-group').classList.remove('expanded');
         });
-    });
-
-    // Selected color button (mobile toggle)
-    document.getElementById('selected-color-btn').addEventListener('click', () => {
-        document.getElementById('page-bg-selector').classList.toggle('expanded');
     });
 
     // Theme buttons
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+    document.querySelectorAll('#theme-buttons .theme-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
             const themeName = btn.dataset.theme;
             applyTheme(themeName);
-            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#theme-buttons .theme-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            // Update selected theme preview
+            const selectedTheme = document.getElementById('selected-theme');
+            selectedTheme.innerHTML = btn.innerHTML;
+            // Collapse after selection
+            document.getElementById('theme-group').classList.remove('expanded');
         });
+    });
+
+    // Collapsible setting headers
+    document.querySelectorAll('.setting-group.collapsible .setting-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const group = header.parentElement;
+            // Close other expanded groups
+            document.querySelectorAll('.setting-group.collapsible.expanded').forEach(g => {
+                if (g !== group) g.classList.remove('expanded');
+            });
+            // Toggle this group
+            group.classList.toggle('expanded');
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.setting-group.collapsible')) {
+            document.querySelectorAll('.setting-group.collapsible.expanded').forEach(g => {
+                g.classList.remove('expanded');
+            });
+        }
     });
 
     // Prevent arrow key scrolling
@@ -323,9 +344,8 @@ function startGame() {
     updateScoreDisplay();
     updateStrikesDisplay();
 
-    // Hide start screen and page background selector
+    // Hide start screen
     document.getElementById('start-screen').classList.add('hidden');
-    document.getElementById('page-bg-selector').classList.remove('visible');
 
     // Start first level (with snake reset)
     startLevel(true);
@@ -369,7 +389,6 @@ function restartGame() {
 function goToMainMenu() {
     document.getElementById('game-over').classList.add('hidden');
     document.getElementById('start-screen').classList.remove('hidden');
-    document.getElementById('page-bg-selector').classList.add('visible');
     game.letters = [];
     render();
 }

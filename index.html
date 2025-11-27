@@ -11,26 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
-    <!-- Page background color selector (top left of screen) -->
-    <div class="color-selector-corner" id="page-bg-selector">
-        <span class="toggle-label">Page Background:</span>
-        <button class="selected-color-btn" id="selected-color-btn" style="background: #7ab9f1;"></button>
-        <div class="color-swatches" id="color-swatches">
-            <button class="color-swatch active" data-color="#7ab9f1" style="background: #7ab9f1;" title="Sky Blue"></button>
-            <button class="color-swatch" data-color="#a7f0f5" style="background: #a7f0f5;" title="Cyan"></button>
-            <button class="color-swatch" data-color="#b0acf1" style="background: #b0acf1;" title="Soft Purple"></button>
-            <button class="color-swatch" data-color="#1a1a2e" style="background: #1a1a2e;" title="Dark Navy"></button>
-            <button class="color-swatch" data-color="#f4ef7d" style="background: #f4ef7d;" title="Yellow"></button>
-            <button class="color-swatch" data-color="#cef577" style="background: #cef577;" title="Lime Green"></button>
-            <button class="color-swatch" data-color="#f2a7d0" style="background: #f2a7d0;" title="Light Pink"></button>
-            <button class="color-swatch" data-color="#72a4de" style="background: #72a4de;" title="Medium Blue"></button>
-            <button class="color-swatch" data-color="#d793fa" style="background: #d793fa;" title="Light Purple"></button>
-            <button class="color-swatch" data-color="#bee9c3" style="background: #bee9c3;" title="Mint Green"></button>
-            <button class="color-swatch" data-color="#ee836b" style="background: #ee836b;" title="Coral"></button>
-            <button class="color-swatch" data-color="#e56bbf" style="background: #e56bbf;" title="Bright Pink"></button>
-        </div>
-    </div>
-
     <div class="game-container">
         <!-- Header with animal and word progress -->
         <div class="game-header">
@@ -87,9 +67,17 @@
                             <button class="toggle-btn" id="walls-solid">Solid</button>
                         </div>
                     </div>
-                    <div class="setting-group">
-                        <span class="setting-label">Theme</span>
-                        <div class="theme-buttons" id="theme-buttons">
+                    <div class="setting-group collapsible" id="theme-group">
+                        <div class="setting-header">
+                            <span class="setting-label">Theme</span>
+                            <button class="selected-preview theme-btn active" id="selected-theme" data-theme="default" title="Classic">
+                                <span class="theme-preview" style="background: #16213e;">
+                                    <span class="preview-snake" style="background: #4ade80;"></span>
+                                    <span class="preview-letter" style="background: #fbbf24;"></span>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="theme-buttons collapsed" id="theme-buttons">
                             <button class="theme-btn active" data-theme="default" title="Classic">
                                 <span class="theme-preview" style="background: #16213e;">
                                     <span class="preview-snake" style="background: #4ade80;"></span>
@@ -114,6 +102,26 @@
                                     <span class="preview-letter" style="background: #7a64ec;"></span>
                                 </span>
                             </button>
+                        </div>
+                    </div>
+                    <div class="setting-group collapsible" id="bg-group">
+                        <div class="setting-header">
+                            <span class="setting-label">Background</span>
+                            <button class="selected-color-btn" id="selected-color-btn" style="background: #7ab9f1;"></button>
+                        </div>
+                        <div class="color-swatches collapsed" id="color-swatches">
+                            <button class="color-swatch active" data-color="#7ab9f1" style="background: #7ab9f1;" title="Sky Blue"></button>
+                            <button class="color-swatch" data-color="#a7f0f5" style="background: #a7f0f5;" title="Cyan"></button>
+                            <button class="color-swatch" data-color="#b0acf1" style="background: #b0acf1;" title="Soft Purple"></button>
+                            <button class="color-swatch" data-color="#1a1a2e" style="background: #1a1a2e;" title="Dark Navy"></button>
+                            <button class="color-swatch" data-color="#f4ef7d" style="background: #f4ef7d;" title="Yellow"></button>
+                            <button class="color-swatch" data-color="#cef577" style="background: #cef577;" title="Lime Green"></button>
+                            <button class="color-swatch" data-color="#f2a7d0" style="background: #f2a7d0;" title="Light Pink"></button>
+                            <button class="color-swatch" data-color="#72a4de" style="background: #72a4de;" title="Medium Blue"></button>
+                            <button class="color-swatch" data-color="#d793fa" style="background: #d793fa;" title="Light Purple"></button>
+                            <button class="color-swatch" data-color="#bee9c3" style="background: #bee9c3;" title="Mint Green"></button>
+                            <button class="color-swatch" data-color="#ee836b" style="background: #ee836b;" title="Coral"></button>
+                            <button class="color-swatch" data-color="#e56bbf" style="background: #e56bbf;" title="Bright Pink"></button>
                         </div>
                     </div>
                 </div>
