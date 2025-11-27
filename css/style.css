@@ -616,11 +616,13 @@ body {
     /* Horizontal layout for all settings on mobile */
     .setting-group {
         flex-direction: row;
+        justify-content: center;
         gap: 10px;
     }
 
     .setting-header {
         flex-direction: row;
+        justify-content: center;
     }
 
     .game-header {
