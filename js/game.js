@@ -36,6 +36,54 @@ const CONFIG = {
         letterText: '#1a1a2e'      // Dark text on letters
     },
 
+    // Color themes for gameplay
+    THEMES: {
+        default: {
+            name: 'Classic',
+            background: '#16213e',
+            gridLines: '#1a2744',
+            snakeHead: '#4ade80',
+            snakeBody: '#22c55e',
+            snakeOutline: '#166534',
+            letterBg: '#fbbf24',
+            letterGlow: '#fcd34d',
+            letterText: '#1a1a2e'
+        },
+        neon: {
+            name: 'Neon Pop',
+            background: '#b0acf1',
+            gridLines: '#9d99e0',
+            snakeHead: '#e56bbf',
+            snakeBody: '#d44fa8',
+            snakeOutline: '#a33d82',
+            letterBg: '#cef577',
+            letterGlow: '#e0ff99',
+            letterText: '#1a1a2e'
+        },
+        ocean: {
+            name: 'Ocean',
+            background: '#72a4de',
+            gridLines: '#5a8fcf',
+            snakeHead: '#a7f0f5',
+            snakeBody: '#7ee0e8',
+            snakeOutline: '#4ab8c2',
+            letterBg: '#ee836b',
+            letterGlow: '#ff9a85',
+            letterText: '#1a1a2e'
+        },
+        sunset: {
+            name: 'Sunset',
+            background: '#d793fa',
+            gridLines: '#c77eeb',
+            snakeHead: '#f4ef7d',
+            snakeBody: '#e8e36a',
+            snakeOutline: '#c9c44d',
+            letterBg: '#f2a7d0',
+            letterGlow: '#ffbde0',
+            letterText: '#1a1a2e'
+        }
+    },
+
     // Difficulty progression (max word length by level ranges)
     DIFFICULTY: [
         { minLevel: 1, maxLevel: 3, maxWordLength: 3 },    // CAT, DOG, etc.
@@ -87,6 +135,9 @@ const game = {
 
     // Wall mode: true = wrap around, false = walls kill
     wrapAround: true,
+
+    // Current color theme
+    currentTheme: 'default',
 
     // Touch handling
     touchStartX: 0,
@@ -165,12 +216,48 @@ function setupEventListeners() {
         });
     });
 
+    // Theme buttons
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const themeName = btn.dataset.theme;
+            applyTheme(themeName);
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
     // Prevent arrow key scrolling
     window.addEventListener('keydown', (e) => {
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
             e.preventDefault();
         }
     });
+}
+
+// =============================================
+// THEME FUNCTIONS
+// =============================================
+
+function applyTheme(themeName) {
+    if (CONFIG.THEMES[themeName]) {
+        game.currentTheme = themeName;
+        const theme = CONFIG.THEMES[themeName];
+        // Update CONFIG.COLORS with theme colors
+        CONFIG.COLORS.background = theme.background;
+        CONFIG.COLORS.gridLines = theme.gridLines;
+        CONFIG.COLORS.snakeHead = theme.snakeHead;
+        CONFIG.COLORS.snakeBody = theme.snakeBody;
+        CONFIG.COLORS.snakeOutline = theme.snakeOutline;
+        CONFIG.COLORS.letterBg = theme.letterBg;
+        CONFIG.COLORS.letterGlow = theme.letterGlow;
+        CONFIG.COLORS.letterText = theme.letterText;
+        // Re-render to show new colors
+        render();
+    }
+}
+
+function getThemeColors() {
+    return CONFIG.THEMES[game.currentTheme] || CONFIG.THEMES.default;
 }
 
 // =============================================
@@ -570,7 +657,12 @@ function render() {
         } else {
             // Body segments get slightly darker toward tail
             const brightness = 1 - (index / game.snake.length) * 0.3;
-            ctx.fillStyle = `rgba(34, 197, 94, ${brightness})`;
+            // Convert hex to rgba for opacity
+            const bodyColor = CONFIG.COLORS.snakeBody;
+            const r = parseInt(bodyColor.slice(1, 3), 16);
+            const g = parseInt(bodyColor.slice(3, 5), 16);
+            const b = parseInt(bodyColor.slice(5, 7), 16);
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${brightness})`;
             ctx.shadowBlur = 0;
         }
 
