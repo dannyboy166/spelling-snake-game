@@ -24,14 +24,21 @@ class AudioManager {
     }
 
     /**
-     * Start background music
+     * Start background music with seamless looping
      */
     startBackgroundMusic() {
         if (this.bgMusic) return; // Already playing
 
         this.bgMusic = new Audio('assets/audio/background-music.mp3');
-        this.bgMusic.loop = true;
         this.bgMusic.volume = 0.3;
+
+        // Seamless loop: restart slightly before end
+        this.bgMusic.addEventListener('timeupdate', () => {
+            if (this.bgMusic && this.bgMusic.duration - this.bgMusic.currentTime < 0.1) {
+                this.bgMusic.currentTime = 0;
+            }
+        });
+
         this.bgMusic.play().catch(e => console.log('Audio play failed:', e));
     }
 
