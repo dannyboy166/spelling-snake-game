@@ -686,10 +686,10 @@ function render() {
 
         // Letter text
         ctx.fillStyle = CONFIG.COLORS.letterText;
-        ctx.font = `bold ${gridSize - 8 * game.scale}px Fredoka`;
+        ctx.font = `bold ${Math.floor(gridSize * 0.7)}px Fredoka`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(letter.char, x + gridSize / 2, y + gridSize / 2 + 1 * game.scale);
+        ctx.fillText(letter.char, x + gridSize / 2, y + gridSize / 2 + gridSize * 0.04);
     });
 
     // Determine if snake should flash red (death animation)
