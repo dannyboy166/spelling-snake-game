@@ -676,24 +676,20 @@ function render() {
         ctx.shadowColor = CONFIG.COLORS.letterGlow;
         ctx.shadowBlur = 12 * game.scale;
 
-        // Background circle (20% bigger than grid cell)
-        const letterSize = gridSize * 1.2;
-        const centerX = x + gridSize / 2;
-        const centerY = y + gridSize / 2;
-
+        // Background circle
         ctx.fillStyle = CONFIG.COLORS.letterBg;
         ctx.beginPath();
-        ctx.arc(centerX, centerY, letterSize / 2, 0, Math.PI * 2);
+        ctx.arc(x + gridSize / 2, y + gridSize / 2, gridSize / 2 - 2 * game.scale, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.shadowBlur = 0;
 
         // Letter text
         ctx.fillStyle = CONFIG.COLORS.letterText;
-        ctx.font = `bold ${Math.floor(letterSize * 0.65)}px Fredoka`;
+        ctx.font = `bold ${Math.floor(gridSize * 0.7)}px Fredoka`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(letter.char, centerX, centerY);
+        ctx.fillText(letter.char, x + gridSize / 2, y + gridSize / 2);
     });
 
     // Determine if snake should flash red (death animation)
