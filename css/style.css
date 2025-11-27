@@ -606,6 +606,8 @@ body {
     .word-display {
         grid-column: 2;
         grid-row: 2;
+        overflow: hidden;
+        min-width: 0;
     }
 
     .score-display {
