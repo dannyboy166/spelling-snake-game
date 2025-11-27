@@ -646,8 +646,8 @@ function spawnLetters() {
         }
     }
 
-    // Spawn heart pickup (30% chance, only if player has less than 3 lives)
-    if (game.strikes > 0 && Math.random() < 0.3) {
+    // Spawn heart pickup (20% chance, only if player has less than 3 lives)
+    if (game.strikes > 0 && Math.random() < 0.2) {
         const heartPos = getRandomEmptyPosition(occupied);
         if (heartPos) {
             game.letters.push({
