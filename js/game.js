@@ -331,6 +331,7 @@ function startGame() {
     // Initialize audio
     audioManager.init();
     audioManager.playStart();
+    audioManager.startBackgroundMusic();
 
     // Reset game state
     game.score = 0;
@@ -397,6 +398,7 @@ function gameOver() {
     game.isRunning = false;
     clearInterval(game.gameLoop);
 
+    audioManager.stopBackgroundMusic();
     audioManager.playGameOver();
 
     // Start death animation

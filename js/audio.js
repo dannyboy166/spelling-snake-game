@@ -8,6 +8,7 @@ class AudioManager {
     constructor() {
         this.audioContext = null;
         this.enabled = true;
+        this.bgMusic = null;
     }
 
     /**
@@ -19,6 +20,29 @@ class AudioManager {
         }
         if (this.audioContext.state === 'suspended') {
             this.audioContext.resume();
+        }
+    }
+
+    /**
+     * Start background music
+     */
+    startBackgroundMusic() {
+        if (this.bgMusic) return; // Already playing
+
+        this.bgMusic = new Audio('assets/audio/background-music.wav');
+        this.bgMusic.loop = true;
+        this.bgMusic.volume = 0.3;
+        this.bgMusic.play().catch(e => console.log('Audio play failed:', e));
+    }
+
+    /**
+     * Stop background music
+     */
+    stopBackgroundMusic() {
+        if (this.bgMusic) {
+            this.bgMusic.pause();
+            this.bgMusic.currentTime = 0;
+            this.bgMusic = null;
         }
     }
 
