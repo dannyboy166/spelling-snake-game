@@ -29,7 +29,7 @@ class AudioManager {
     startBackgroundMusic() {
         if (this.bgMusic) return; // Already playing
 
-        this.bgMusic = new Audio('assets/audio/background-music.mp3?v=2');
+        this.bgMusic = new Audio('assets/audio/background-music.mp3?v=3');
         this.bgMusic.loop = true;
         this.bgMusic.volume = 0.3;
         this.bgMusic.play().catch(e => console.log('Audio play failed:', e));
