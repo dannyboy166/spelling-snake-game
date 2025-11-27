@@ -82,7 +82,7 @@ class AudioManager {
      * Play when snake eats wrong letter (optional mild feedback)
      */
     playWrongLetter() {
-        this.playTone(200, 0.2, 'triangle', 0.2);
+        this.playTone(200, 0.2, 'triangle', 0.5);
     }
 
     /**
@@ -93,6 +93,15 @@ class AudioManager {
         notes.forEach((freq, i) => {
             setTimeout(() => this.playTone(freq, 0.25, 'sine', 0.35), i * 120);
         });
+    }
+
+    /**
+     * Play when heart is collected - life restored!
+     */
+    playHeartCollect() {
+        this.playTone(523.25, 0.1, 'sine', 0.4);  // C5
+        setTimeout(() => this.playTone(659.25, 0.1, 'sine', 0.4), 80);  // E5
+        setTimeout(() => this.playTone(783.99, 0.15, 'sine', 0.4), 160); // G5
     }
 
     /**

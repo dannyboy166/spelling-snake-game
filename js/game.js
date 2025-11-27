@@ -536,7 +536,7 @@ function gameStep() {
             // Heart pickup - restore a life!
             game.snake.pop(); // Don't grow from heart
             game.strikes = Math.max(0, game.strikes - 1);
-            audioManager.playCorrectLetter(); // Happy sound
+            audioManager.playHeartCollect(); // Heart collect sound
             updateStrikesDisplay();
             // Remove the heart from letters
             game.letters.splice(letterIndex, 1);
@@ -696,24 +696,18 @@ function render() {
         const y = letter.y * gridSize;
 
         if (letter.isHeart) {
-            // Draw heart pickup with pink/red glow
+            // Draw heart pickup with glow
             ctx.shadowColor = '#ff6b6b';
             ctx.shadowBlur = 15 * game.scale;
 
-            // Pink background circle
-            ctx.fillStyle = '#ff4757';
-            ctx.beginPath();
-            ctx.arc(x + gridSize / 2, y + gridSize / 2, gridSize / 2 - 2 * game.scale, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.shadowBlur = 0;
-
-            // Heart emoji (+ symbol instead for better centering)
-            ctx.fillStyle = 'white';
-            ctx.font = `bold ${Math.floor(gridSize * 0.5)}px sans-serif`;
+            // Heart emoji with pulsing size (0.8 to 1.0)
+            const pulse = 0.9 + 0.1 * Math.sin(Date.now() / 600);
+            ctx.font = `${Math.floor(gridSize * pulse)}px sans-serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('+', x + gridSize / 2, y + gridSize / 2);
+            ctx.fillText('❤️', x + gridSize / 2 - 1, y + gridSize / 2 + 2);
+
+            ctx.shadowBlur = 0;
         } else {
             // All letters glow equally - kids must figure out the spelling!
             ctx.shadowColor = CONFIG.COLORS.letterGlow;
