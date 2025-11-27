@@ -158,7 +158,10 @@ function init() {
 
     // Set canvas size (responsive)
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+        scaleWordToFit();
+    });
 
     // Set up event listeners
     setupEventListeners();
@@ -869,6 +872,7 @@ function updateAnimalDisplay() {
 function updateWordDisplay() {
     const container = document.getElementById('word-letters');
     container.innerHTML = '';
+    container.style.transform = 'scale(1)'; // Reset scale
 
     game.currentAnimal.word.split('').forEach((letter, index) => {
         const box = document.createElement('div');
@@ -885,6 +889,26 @@ function updateWordDisplay() {
 
         container.appendChild(box);
     });
+
+    // Scale down if word is too wide for container
+    requestAnimationFrame(() => {
+        scaleWordToFit();
+    });
+}
+
+function scaleWordToFit() {
+    const container = document.getElementById('word-letters');
+    const parent = container.parentElement;
+    const containerWidth = container.scrollWidth;
+    const parentWidth = parent.offsetWidth;
+
+    if (containerWidth > parentWidth) {
+        const scale = parentWidth / containerWidth;
+        container.style.transform = `scale(${scale})`;
+        container.style.transformOrigin = 'center center';
+    } else {
+        container.style.transform = 'scale(1)';
+    }
 }
 
 function updateScoreDisplay() {
