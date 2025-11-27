@@ -1,0 +1,429 @@
+/* =============================================
+   SPELLING SNAKE - SASCO GAMES
+   A fun educational game for young learners
+   ============================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Fredoka', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    overflow: hidden;
+}
+
+/* =============================================
+   GAME CONTAINER
+   ============================================= */
+
+.game-container {
+    background: #1a1a2e;
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    position: relative;
+    max-width: 100%;
+}
+
+/* =============================================
+   HEADER - Animal, Word Progress, Score
+   ============================================= */
+
+.game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #2d2d44 0%, #1f1f35 100%);
+    border-radius: 12px;
+    gap: 15px;
+}
+
+.animal-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.animal-emoji {
+    font-size: 60px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.word-display {
+    flex: 1;
+    text-align: center;
+}
+
+.spell-label {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.word-letters {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.letter-box {
+    width: 44px;
+    height: 50px;
+    background: #2d2d44;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 700;
+    color: #666;
+    border: 3px solid #3d3d5c;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+/* Collected letters show green with the revealed letter */
+.letter-box.collected {
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+    border-color: #22c55e;
+    color: white;
+    transform: scale(1.05);
+    animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1.05); }
+}
+
+/* Celebration styles when word is complete */
+.letter-box.celebrating {
+    animation: letter-dance 0.5s ease infinite;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-color: #f59e0b;
+}
+
+@keyframes letter-dance {
+    0%, 100% { transform: scale(1.05) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(-3deg); }
+    75% { transform: scale(1.1) rotate(3deg); }
+}
+
+.animal-emoji.celebrating {
+    animation: emoji-celebrate 0.4s ease infinite;
+}
+
+@keyframes emoji-celebrate {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.2) rotate(-10deg); }
+    75% { transform: scale(1.2) rotate(10deg); }
+}
+
+/* Finding next animal text */
+.finding-text {
+    color: #888;
+    font-size: 16px;
+    animation: pulse-text 0.8s ease infinite;
+}
+
+@keyframes pulse-text {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.score-display {
+    text-align: center;
+    min-width: 80px;
+}
+
+.score-label {
+    color: #888;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.score-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fbbf24;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* =============================================
+   GAME CANVAS
+   ============================================= */
+
+#game-canvas {
+    display: block;
+    border-radius: 12px;
+    background: #16213e;
+}
+
+/* =============================================
+   TOUCH CONTROLS
+   ============================================= */
+
+.touch-controls {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    margin-top: 15px;
+    padding: 10px;
+}
+
+.touch-row {
+    display: flex;
+    gap: 60px;
+}
+
+.touch-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.touch-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 10px rgba(34, 197, 94, 0.4);
+}
+
+/* Show touch controls on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .touch-controls {
+        display: flex;
+    }
+}
+
+/* =============================================
+   OVERLAYS
+   ============================================= */
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    z-index: 100;
+    animation: fadeIn 0.3s ease;
+}
+
+.overlay.hidden {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.overlay-content {
+    text-align: center;
+    color: white;
+    padding: 30px;
+    max-width: 90%;
+}
+
+.overlay-content h1 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: #4ade80;
+}
+
+.overlay-content h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: #4ade80;
+}
+
+.overlay-content p {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #ccc;
+}
+
+.instructions {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.instructions p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.highlight {
+    color: #4ade80;
+    font-weight: 600;
+}
+
+.start-btn {
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 22px;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: 'Fredoka', sans-serif;
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-top: 10px;
+}
+
+.start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(34, 197, 94, 0.5);
+}
+
+.start-btn:active {
+    transform: translateY(0);
+}
+
+/* Level complete specific styles */
+.celebration-emoji {
+    font-size: 80px;
+    margin-bottom: 15px;
+    animation: celebrate 0.5s ease infinite;
+}
+
+@keyframes celebrate {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(-5deg); }
+    75% { transform: scale(1.1) rotate(5deg); }
+}
+
+.well-done {
+    font-size: 24px !important;
+    color: #fbbf24 !important;
+    font-weight: 600;
+}
+
+#completed-word {
+    font-size: 48px;
+    letter-spacing: 8px;
+    color: white;
+    text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+
+.game-footer {
+    margin-top: 15px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    text-align: center;
+}
+
+.game-footer strong {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* =============================================
+   RESPONSIVE DESIGN
+   ============================================= */
+
+@media (max-width: 500px) {
+    body {
+        padding: 5px;
+    }
+
+    .game-container {
+        padding: 10px;
+        border-radius: 15px;
+    }
+
+    .game-header {
+        padding: 8px 10px;
+        gap: 10px;
+    }
+
+    .animal-emoji {
+        font-size: 36px;
+    }
+
+    .letter-box {
+        width: 32px;
+        height: 38px;
+        font-size: 20px;
+    }
+
+    .score-value {
+        font-size: 22px;
+    }
+
+    .overlay-content h1 {
+        font-size: 28px;
+    }
+
+    .start-btn {
+        padding: 12px 30px;
+        font-size: 18px;
+    }
+
+    .touch-btn {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+    }
+
+    .touch-row {
+        gap: 50px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+    .letter-box {
+        width: 28px;
+        height: 34px;
+        font-size: 18px;
+        gap: 5px;
+    }
+
+    .animal-emoji {
+        font-size: 30px;
+    }
+}

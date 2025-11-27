@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Spelling Snake - SASCO Games</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header with animal and word progress -->
+        <div class="game-header">
+            <div class="animal-display">
+                <span class="animal-emoji" id="animal-emoji">🐱</span>
+            </div>
+            <div class="word-display">
+                <div class="spell-label">Spell:</div>
+                <div class="word-letters" id="word-letters">
+                    <!-- Letters will be inserted here -->
+                </div>
+            </div>
+            <div class="score-display">
+                <div class="score-label">Score</div>
+                <div class="score-value" id="score">0</div>
+            </div>
+        </div>
+
+        <!-- Game canvas -->
+        <canvas id="game-canvas"></canvas>
+
+        <!-- Touch controls for mobile -->
+        <div class="touch-controls" id="touch-controls">
+            <button class="touch-btn" data-direction="up">▲</button>
+            <div class="touch-row">
+                <button class="touch-btn" data-direction="left">◀</button>
+                <button class="touch-btn" data-direction="right">▶</button>
+            </div>
+            <button class="touch-btn" data-direction="down">▼</button>
+        </div>
+
+        <!-- Start screen overlay -->
+        <div class="overlay" id="start-screen">
+            <div class="overlay-content">
+                <h1>🐍 Spelling Snake 🐍</h1>
+                <p>Collect letters to spell animal names!</p>
+                <div class="instructions">
+                    <p>🐱 Look at the <span class="highlight">animal picture</span> and spell its name</p>
+                    <p>🔤 Find the <span class="highlight">correct letters</span> in order</p>
+                    <p>⬆️ Use <span class="highlight">arrow keys</span> or <span class="highlight">swipe</span> to move</p>
+                    <p>🐍 Your snake <span class="highlight">grows longer</span> with each word!</p>
+                    <p>⚠️ Don't hit the walls or yourself!</p>
+                </div>
+                <button class="start-btn" id="start-btn">Start Game!</button>
+            </div>
+        </div>
+
+        <!-- Game over overlay -->
+        <div class="overlay hidden" id="game-over">
+            <div class="overlay-content">
+                <h2>Game Over!</h2>
+                <p>Final Score: <span id="final-score">0</span></p>
+                <p>Animals Spelled: <span id="animals-spelled">0</span></p>
+                <button class="start-btn" id="restart-btn">Play Again!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="game-footer">
+        Part of the <strong>SASCO Games</strong> collection for schools
+    </footer>
+
+    <!-- Game scripts -->
+    <script src="js/animals.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
