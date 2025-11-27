@@ -171,19 +171,22 @@ function init() {
 }
 
 function resizeCanvas() {
-    const container = document.querySelector('.game-container');
-    const maxWidth = Math.min(container.offsetWidth - 40, CONFIG.GRID_SIZE * CONFIG.GRID_WIDTH);
-
-    // Calculate scale factor
     const baseWidth = CONFIG.GRID_SIZE * CONFIG.GRID_WIDTH;
-    const scale = maxWidth / baseWidth;
+    const baseHeight = CONFIG.GRID_SIZE * CONFIG.GRID_HEIGHT;
 
-    // Store scale for rendering
-    game.scale = Math.min(scale, 1); // Never scale up, only down
+    // Get available width (viewport width minus some padding)
+    const availableWidth = window.innerWidth - 40;
+
+    // Only scale down if screen is narrower than the game needs
+    if (availableWidth < baseWidth) {
+        game.scale = availableWidth / baseWidth;
+    } else {
+        game.scale = 1; // Full size on desktop
+    }
 
     // Set canvas size
-    game.canvas.width = Math.floor(CONFIG.GRID_WIDTH * CONFIG.GRID_SIZE * game.scale);
-    game.canvas.height = Math.floor(CONFIG.GRID_HEIGHT * CONFIG.GRID_SIZE * game.scale);
+    game.canvas.width = Math.floor(baseWidth * game.scale);
+    game.canvas.height = Math.floor(baseHeight * game.scale);
 
     // Re-render if game exists
     if (game.ctx) {
