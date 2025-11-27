@@ -56,7 +56,7 @@ body {
 }
 
 .animal-emoji {
-    font-size: 60px;
+    font-size: 66px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
     animation: bounce 2s ease-in-out infinite;
 }
