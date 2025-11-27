@@ -77,6 +77,10 @@ const game = {
     level: 1,
     animalsSpelled: 0,
 
+    // Lives/strikes system
+    strikes: 0,
+    maxStrikes: 3,
+
     // Touch handling
     touchStartX: 0,
     touchStartY: 0
@@ -152,9 +156,11 @@ function startGame() {
     game.animalsSpelled = 0;
     game.usedAnimals = [];
     game.speed = CONFIG.INITIAL_SPEED;
+    game.strikes = 0;
 
     // Update score display
     updateScoreDisplay();
+    updateStrikesDisplay();
 
     // Hide start screen
     document.getElementById('start-screen').classList.add('hidden');
@@ -327,9 +333,18 @@ function gameStep() {
             // Respawn all letters
             spawnLetters();
         } else {
-            // Wrong letter - remove tail (no growth), optional penalty
+            // Wrong letter - add a strike!
             game.snake.pop();
+            game.strikes++;
             audioManager.playWrongLetter();
+            updateStrikesDisplay();
+
+            // Check if out of strikes
+            if (game.strikes >= game.maxStrikes) {
+                render();
+                gameOver();
+                return;
+            }
         }
     } else {
         // No letter eaten - remove tail (normal movement)
@@ -644,6 +659,23 @@ function updateWordDisplay() {
 
 function updateScoreDisplay() {
     document.getElementById('score').textContent = game.score;
+}
+
+function updateStrikesDisplay() {
+    const container = document.getElementById('strikes-display');
+    container.innerHTML = '';
+
+    for (let i = 0; i < game.maxStrikes; i++) {
+        const cross = document.createElement('span');
+        cross.className = 'strike-icon';
+        if (i < game.strikes) {
+            cross.classList.add('used');
+            cross.textContent = '❌';
+        } else {
+            cross.textContent = '❤️';
+        }
+        container.appendChild(cross);
+    }
 }
 
 function showHeaderCelebration() {
