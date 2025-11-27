@@ -57,7 +57,7 @@ const game = {
     // Snake data
     snake: [],
     direction: { x: 1, y: 0 },
-    nextDirection: { x: 1, y: 0 },
+    directionQueue: [],  // Queue for buffering rapid direction inputs
 
     // Game state
     isRunning: false,
@@ -175,7 +175,7 @@ function startLevel(isFirstLevel = false) {
     if (isFirstLevel) {
         initSnake();
         game.direction = { x: 1, y: 0 };
-        game.nextDirection = { x: 1, y: 0 };
+        game.directionQueue = [];
     }
 
     // Get new animal based on difficulty
@@ -281,8 +281,10 @@ function initSnake() {
 function gameStep() {
     if (!game.isRunning) return;
 
-    // Apply next direction
-    game.direction = { ...game.nextDirection };
+    // Apply next direction from queue if available
+    if (game.directionQueue.length > 0) {
+        game.direction = game.directionQueue.shift();
+    }
 
     // Calculate new head position
     const head = game.snake[0];
@@ -600,21 +602,31 @@ function handleKeyDown(e) {
 function setDirection(dir) {
     if (!game.isRunning) return;
 
-    const current = game.direction;
+    // Get the last queued direction, or current direction if queue is empty
+    const lastDir = game.directionQueue.length > 0
+        ? game.directionQueue[game.directionQueue.length - 1]
+        : game.direction;
+
+    let newDir = null;
 
     switch (dir) {
         case 'up':
-            if (current.y !== 1) game.nextDirection = { x: 0, y: -1 };
+            if (lastDir.y !== 1) newDir = { x: 0, y: -1 };
             break;
         case 'down':
-            if (current.y !== -1) game.nextDirection = { x: 0, y: 1 };
+            if (lastDir.y !== -1) newDir = { x: 0, y: 1 };
             break;
         case 'left':
-            if (current.x !== 1) game.nextDirection = { x: -1, y: 0 };
+            if (lastDir.x !== 1) newDir = { x: -1, y: 0 };
             break;
         case 'right':
-            if (current.x !== -1) game.nextDirection = { x: 1, y: 0 };
+            if (lastDir.x !== -1) newDir = { x: 1, y: 0 };
             break;
+    }
+
+    // Add to queue if valid and queue not full (max 2 buffered inputs)
+    if (newDir && game.directionQueue.length < 2) {
+        game.directionQueue.push(newDir);
     }
 }
 
