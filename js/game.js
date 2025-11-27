@@ -401,6 +401,9 @@ function gameOver() {
     audioManager.stopBackgroundMusic();
     audioManager.playGameOver();
 
+    // Show the full word with green (collected) and red (missed) letters
+    showWordReveal();
+
     // Start death animation
     game.isDying = true;
     let flashes = 0;
@@ -417,6 +420,12 @@ function gameOver() {
 }
 
 function showGameOverScreen() {
+    // Stop flashing on missed letters
+    document.querySelectorAll('.letter-box.missed').forEach(box => {
+        box.classList.remove('missed');
+        box.classList.add('missed-final');
+    });
+
     // Update final score display
     document.getElementById('final-score').textContent = game.score;
     document.getElementById('animals-spelled').textContent = game.animalsSpelled;
@@ -957,6 +966,33 @@ function updateWordDisplay() {
     });
 
     // Scale down if word is too wide for container
+    requestAnimationFrame(() => {
+        scaleWordToFit();
+    });
+}
+
+function showWordReveal() {
+    const container = document.getElementById('word-letters');
+    container.innerHTML = '';
+    container.style.transform = 'scale(1)';
+
+    game.currentAnimal.word.split('').forEach((letter, index) => {
+        const box = document.createElement('div');
+        box.className = 'letter-box';
+        box.textContent = letter;
+
+        if (index < game.currentLetterIndex) {
+            // Already collected - green
+            box.classList.add('collected');
+        } else {
+            // Missed - red
+            box.classList.add('missed');
+        }
+
+        container.appendChild(box);
+    });
+
+    // Scale down if word is too wide
     requestAnimationFrame(() => {
         scaleWordToFit();
     });

@@ -117,6 +117,28 @@ body {
     100% { transform: scale(1.05); }
 }
 
+/* Missed letters show red on game over - flashing */
+.letter-box.missed {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border-color: #dc2626;
+    color: white;
+    transform: scale(1.05);
+    animation: flash-missed 0.5s ease infinite;
+}
+
+@keyframes flash-missed {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* Missed letters static (after game over screen shows) */
+.letter-box.missed-final {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border-color: #dc2626;
+    color: white;
+    transform: scale(1.05);
+}
+
 /* Celebration styles when word is complete */
 .letter-box.celebrating {
     animation: letter-dance 0.5s ease infinite;
