@@ -587,6 +587,7 @@ body {
         flex-wrap: wrap;
         padding: 8px 10px;
         gap: 8px;
+        position: relative;
     }
 
     .animal-display {
@@ -595,12 +596,14 @@ body {
 
     .strikes-display {
         order: 2;
-        flex: 1;
-        justify-content: center;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .score-display {
         order: 3;
+        margin-left: auto;
     }
 
     .word-display {
