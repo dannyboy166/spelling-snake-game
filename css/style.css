@@ -314,22 +314,29 @@ body {
 
 .overlay-content h1 {
     font-size: clamp(36px, 6vw, 56px);
-    margin-bottom: 2px;
-    color: #4ade80;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
+    margin-bottom: 15px;
+    background: linear-gradient(
+        90deg,
+        #4ade80 0%,
+        #4ade80 40%,
+        #ffffff 50%,
+        #4ade80 60%,
+        #4ade80 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 2s ease-in-out infinite;
 }
 
-.title-snake {
-    display: inline-block;
-    width: clamp(40px, 6vw, 60px);
-    height: clamp(40px, 6vw, 60px);
-}
-
-#snake-right {
-    transform: scaleX(-1);
+@keyframes shimmer {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
 }
 
 .overlay-content h2 {
@@ -606,12 +613,30 @@ body {
     transform: translateY(0);
 }
 
+/* Play Button Row with Snakes */
+.play-button-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-top: 8px;
+}
+
+.play-snake {
+    width: clamp(100px, 15vw, 120px);
+    height: clamp(100px, 15vw, 120px);
+    margin: 0 -20px;
+}
+
+#snake-right {
+    transform: scaleX(-1);
+}
+
 /* Lottie Play Button */
 .lottie-btn-container {
     cursor: pointer;
     width: clamp(240px, 40vw, 400px);
     height: clamp(120px, 20vw, 200px);
-    margin: 8px auto 0;
     transition: transform 0.2s ease, filter 0.2s ease;
     filter: drop-shadow(0 4px 20px rgba(100, 80, 200, 0.5));
 }
