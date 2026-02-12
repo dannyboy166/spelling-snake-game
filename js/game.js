@@ -722,24 +722,48 @@ function render() {
 
             ctx.shadowBlur = 0;
         } else {
-            // All letters glow equally - kids must figure out the spelling!
-            ctx.shadowColor = CONFIG.COLORS.letterGlow;
-            ctx.shadowBlur = 12 * game.scale;
+            const centerX = x + gridSize / 2;
+            const centerY = y + gridSize / 2;
+            const radius = gridSize / 2 - 2 * game.scale;
 
-            // Background circle
-            ctx.fillStyle = CONFIG.COLORS.letterBg;
+            // Outer glow
+            ctx.shadowColor = CONFIG.COLORS.letterGlow;
+            ctx.shadowBlur = 10 * game.scale;
+
+            // Gradient fill for 3D look
+            const gradient = ctx.createRadialGradient(
+                centerX - radius * 0.3, centerY - radius * 0.3, 0,
+                centerX, centerY, radius
+            );
+            gradient.addColorStop(0, '#ffe066'); // Bright highlight
+            gradient.addColorStop(0.4, CONFIG.COLORS.letterBg);
+            gradient.addColorStop(1, '#d97706'); // Darker edge
+
+            // Main circle
+            ctx.fillStyle = gradient;
             ctx.beginPath();
-            ctx.arc(x + gridSize / 2, y + gridSize / 2, gridSize / 2 - 2 * game.scale, 0, Math.PI * 2);
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
             ctx.fill();
 
+            // Subtle border
             ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#b45309';
+            ctx.lineWidth = 1.5 * game.scale;
+            ctx.stroke();
 
-            // Letter text
+            // Inner highlight (top)
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius - 2 * game.scale, -Math.PI * 0.8, -Math.PI * 0.2);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 2 * game.scale;
+            ctx.stroke();
+
+            // Letter text - slightly lower for better centering
             ctx.fillStyle = CONFIG.COLORS.letterText;
-            ctx.font = `bold ${Math.floor(gridSize * 0.7)}px Fredoka`;
+            ctx.font = `bold ${Math.floor(gridSize * 0.65)}px Fredoka`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(letter.char, x + gridSize / 2, y + gridSize / 2);
+            ctx.fillText(letter.char, centerX, centerY + 1 * game.scale);
         }
     });
 

@@ -67,7 +67,7 @@ body {
 }
 
 .animal-emoji {
-    font-size: 66px;
+    font-size: 85px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
     animation: bounce 2s ease-in-out infinite;
 }
@@ -878,7 +878,7 @@ body {
     }
 
     .animal-emoji {
-        font-size: 72px;
+        font-size: 80px;
     }
 
     .letter-box {
