@@ -177,19 +177,9 @@ function init() {
 }
 
 function resizeCanvas() {
-    // Only set orientation if game is NOT running (menu or game over)
-    if (!game.isRunning) {
-        const aspectRatio = window.innerWidth / window.innerHeight;
-        const isLandscape = aspectRatio > 1;
-
-        if (isLandscape) {
-            CONFIG.GRID_WIDTH = CONFIG.LANDSCAPE_COLS;
-            CONFIG.GRID_HEIGHT = CONFIG.LANDSCAPE_ROWS;
-        } else {
-            CONFIG.GRID_WIDTH = CONFIG.PORTRAIT_COLS;
-            CONFIG.GRID_HEIGHT = CONFIG.PORTRAIT_ROWS;
-        }
-    }
+    // Always use landscape grid (16x12)
+    CONFIG.GRID_WIDTH = CONFIG.LANDSCAPE_COLS;
+    CONFIG.GRID_HEIGHT = CONFIG.LANDSCAPE_ROWS;
 
     // Get available space (leave room for header, controls, padding)
     const availableWidth = window.innerWidth - 60;
