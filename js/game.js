@@ -185,8 +185,19 @@ function resizeCanvas() {
     const viewportWidth = Math.min(window.innerWidth, document.documentElement.clientWidth);
     const viewportHeight = Math.min(window.innerHeight, document.documentElement.clientHeight);
 
-    const availableWidth = viewportWidth - 40;
-    const availableHeight = viewportHeight - 280;
+    // Detect mobile landscape (sidebar mode)
+    const isMobileLandscape = viewportHeight < 500 && viewportWidth > viewportHeight;
+
+    // Adjust available space based on layout
+    let availableWidth, availableHeight;
+    if (isMobileLandscape) {
+        // Sidebar takes ~110px, less vertical padding needed
+        availableWidth = viewportWidth - 140;
+        availableHeight = viewportHeight - 40;
+    } else {
+        availableWidth = viewportWidth - 40;
+        availableHeight = viewportHeight - 280;
+    }
 
     // Calculate cell size to fill available space
     const cellByWidth = Math.floor(availableWidth / CONFIG.GRID_WIDTH);
@@ -194,7 +205,7 @@ function resizeCanvas() {
     CONFIG.GRID_SIZE = Math.min(cellByWidth, cellByHeight);
 
     // Clamp cell size to reasonable range
-    CONFIG.GRID_SIZE = Math.max(20, Math.min(CONFIG.GRID_SIZE, 60));
+    CONFIG.GRID_SIZE = Math.max(18, Math.min(CONFIG.GRID_SIZE, 60));
 
     // Scale is always 1 now since we're adjusting cell size directly
     game.scale = 1;
