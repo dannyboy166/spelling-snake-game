@@ -355,6 +355,82 @@ body {
     }
 }
 
+/* Mobile landscape - sidebar layout */
+@media (max-height: 500px) and (orientation: landscape) {
+    .game-container {
+        display: flex;
+        flex-direction: row;
+        padding: 10px;
+    }
+
+    .game-header {
+        flex-direction: column;
+        width: auto;
+        min-width: 80px;
+        max-width: 100px;
+        height: auto;
+        margin-bottom: 0;
+        margin-right: 10px;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .animal-display {
+        order: 1;
+    }
+
+    .animal-emoji {
+        font-size: 50px;
+    }
+
+    .word-display {
+        order: 2;
+        flex: none;
+    }
+
+    .spell-label {
+        font-size: 10px;
+        margin-bottom: 3px;
+    }
+
+    .word-letters {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .letter-box {
+        width: 28px;
+        height: 32px;
+        font-size: 18px;
+    }
+
+    .strikes-display {
+        order: 3;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .strike-icon {
+        font-size: 22px;
+    }
+
+    .score-display {
+        order: 4;
+    }
+
+    .score-label {
+        font-size: 10px;
+    }
+
+    .score-value {
+        font-size: 20px;
+    }
+
+    .touch-controls {
+        display: none;
+    }
+}
+
 /* =============================================
    OVERLAYS
    ============================================= */
