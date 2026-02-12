@@ -72,6 +72,20 @@ body {
     animation: bounce 2s ease-in-out infinite;
 }
 
+.animal-lottie {
+    width: 70px;
+    height: 70px;
+    display: none;
+}
+
+.animal-lottie.active {
+    display: block;
+}
+
+.animal-emoji.hidden {
+    display: none;
+}
+
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }

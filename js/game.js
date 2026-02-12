@@ -949,8 +949,49 @@ function handleTouchMove(e) {
 // UI UPDATES
 // =============================================
 
+// Store animal Lottie animations
+const ANIMAL_ANIMATIONS = {
+    'DOG': typeof DOG_ANIMATION !== 'undefined' ? DOG_ANIMATION : null
+};
+
+let currentAnimalLottie = null;
+
 function updateAnimalDisplay() {
-    document.getElementById('animal-emoji').textContent = game.currentAnimal.emoji;
+    const emojiEl = document.getElementById('animal-emoji');
+    const lottieEl = document.getElementById('animal-lottie');
+    const word = game.currentAnimal.word;
+
+    // Check if we have a Lottie animation for this animal
+    if (ANIMAL_ANIMATIONS[word]) {
+        // Use Lottie
+        emojiEl.classList.add('hidden');
+        lottieEl.classList.add('active');
+
+        // Destroy previous animation if exists
+        if (currentAnimalLottie) {
+            currentAnimalLottie.destroy();
+        }
+
+        // Load new animation
+        currentAnimalLottie = lottie.loadAnimation({
+            container: lottieEl,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            animationData: ANIMAL_ANIMATIONS[word]
+        });
+    } else {
+        // Use emoji
+        emojiEl.classList.remove('hidden');
+        lottieEl.classList.remove('active');
+        emojiEl.textContent = game.currentAnimal.emoji;
+
+        // Destroy Lottie if was playing
+        if (currentAnimalLottie) {
+            currentAnimalLottie.destroy();
+            currentAnimalLottie = null;
+        }
+    }
 }
 
 function updateWordDisplay() {
