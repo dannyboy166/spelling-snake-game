@@ -298,6 +298,26 @@ function setupEventListeners() {
 }
 
 // =============================================
+// COLOR UTILITY FUNCTIONS
+// =============================================
+
+function lightenColor(hex, percent) {
+    const num = parseInt(hex.slice(1), 16);
+    const r = Math.min(255, (num >> 16) + Math.floor(255 * percent / 100));
+    const g = Math.min(255, ((num >> 8) & 0x00FF) + Math.floor(255 * percent / 100));
+    const b = Math.min(255, (num & 0x0000FF) + Math.floor(255 * percent / 100));
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+function darkenColor(hex, percent) {
+    const num = parseInt(hex.slice(1), 16);
+    const r = Math.max(0, (num >> 16) - Math.floor(255 * percent / 100));
+    const g = Math.max(0, ((num >> 8) & 0x00FF) - Math.floor(255 * percent / 100));
+    const b = Math.max(0, (num & 0x0000FF) - Math.floor(255 * percent / 100));
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+// =============================================
 // THEME FUNCTIONS
 // =============================================
 
@@ -726,6 +746,12 @@ function render() {
             const centerY = y + gridSize / 2;
             const radius = gridSize / 2 - 2 * game.scale;
 
+            // Get theme colors and generate gradient variants
+            const baseColor = CONFIG.COLORS.letterBg;
+            const lighterColor = lightenColor(baseColor, 40);
+            const darkerColor = darkenColor(baseColor, 30);
+            const borderColor = darkenColor(baseColor, 45);
+
             // Outer glow
             ctx.shadowColor = CONFIG.COLORS.letterGlow;
             ctx.shadowBlur = 10 * game.scale;
@@ -735,9 +761,9 @@ function render() {
                 centerX - radius * 0.3, centerY - radius * 0.3, 0,
                 centerX, centerY, radius
             );
-            gradient.addColorStop(0, '#ffe066'); // Bright highlight
-            gradient.addColorStop(0.4, CONFIG.COLORS.letterBg);
-            gradient.addColorStop(1, '#d97706'); // Darker edge
+            gradient.addColorStop(0, lighterColor);
+            gradient.addColorStop(0.4, baseColor);
+            gradient.addColorStop(1, darkerColor);
 
             // Main circle
             ctx.fillStyle = gradient;
@@ -747,7 +773,7 @@ function render() {
 
             // Subtle border
             ctx.shadowBlur = 0;
-            ctx.strokeStyle = '#b45309';
+            ctx.strokeStyle = borderColor;
             ctx.lineWidth = 1.5 * game.scale;
             ctx.stroke();
 
