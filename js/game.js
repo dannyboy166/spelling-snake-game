@@ -1111,5 +1111,54 @@ function getMaxWordLength() {
 // START
 // =============================================
 
+// =============================================
+// LOTTIE ANIMATIONS
+// =============================================
+
+let playButtonAnimation = null;
+let snakeLeftAnimation = null;
+let snakeRightAnimation = null;
+
+function initLottieAnimations() {
+    // Initialize play button animation
+    const playBtnContainer = document.getElementById('lottie-play-btn');
+    if (playBtnContainer && typeof lottie !== 'undefined' && typeof PLAY_BUTTON_ANIMATION !== 'undefined') {
+        playButtonAnimation = lottie.loadAnimation({
+            container: playBtnContainer,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            animationData: PLAY_BUTTON_ANIMATION
+        });
+    }
+
+    // Initialize title snake animations
+    const snakeLeft = document.getElementById('snake-left');
+    const snakeRight = document.getElementById('snake-right');
+
+    if (snakeLeft && typeof lottie !== 'undefined' && typeof SNAKE_ANIMATION !== 'undefined') {
+        snakeLeftAnimation = lottie.loadAnimation({
+            container: snakeLeft,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            animationData: SNAKE_ANIMATION
+        });
+    }
+
+    if (snakeRight && typeof lottie !== 'undefined' && typeof SNAKE_ANIMATION !== 'undefined') {
+        snakeRightAnimation = lottie.loadAnimation({
+            container: snakeRight,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            animationData: SNAKE_ANIMATION
+        });
+    }
+}
+
 // Initialize when page loads
-window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('DOMContentLoaded', () => {
+    init();
+    initLottieAnimations();
+});

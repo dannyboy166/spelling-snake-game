@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 </head>
 <body>
     <div class="game-container">
@@ -50,7 +51,7 @@
         <!-- Start screen overlay -->
         <div class="overlay" id="start-screen">
             <div class="overlay-content">
-                <h1>🐍 Spelling Snake 🐍</h1>
+                <h1><span class="title-snake" id="snake-left"></span> Spelling Snake <span class="title-snake" id="snake-right"></span></h1>
                 <p class="subtitle">Collect letters to spell animal names!</p>
 
                 <div class="instructions-compact">
@@ -126,7 +127,9 @@
                     </div>
                 </div>
 
-                <button class="start-btn" id="start-btn">Start Game!</button>
+                <div class="lottie-btn-container" id="start-btn">
+                    <div id="lottie-play-btn"></div>
+                </div>
             </div>
         </div>
 
@@ -151,6 +154,8 @@
     </footer>
 
     <!-- Game scripts -->
+    <script src="js/lottie-data.js"></script>
+    <script src="js/snake-animation.js"></script>
     <script src="js/animals.js"></script>
     <script src="js/audio.js"></script>
     <script src="js/game.js"></script>
