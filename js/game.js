@@ -185,19 +185,8 @@ function resizeCanvas() {
     const viewportWidth = Math.min(window.innerWidth, document.documentElement.clientWidth);
     const viewportHeight = Math.min(window.innerHeight, document.documentElement.clientHeight);
 
-    // Detect mobile landscape (sidebar mode)
-    const isMobileLandscape = viewportHeight < 500 && viewportWidth > viewportHeight;
-
-    // Adjust available space based on layout
-    let availableWidth, availableHeight;
-    if (isMobileLandscape) {
-        // Sidebar takes ~110px, very little vertical space on phones
-        availableWidth = viewportWidth - 150;
-        availableHeight = viewportHeight - 80;
-    } else {
-        availableWidth = viewportWidth - 40;
-        availableHeight = viewportHeight - 280;
-    }
+    const availableWidth = viewportWidth - 40;
+    const availableHeight = viewportHeight - 280;
 
     // Calculate cell size to fill available space
     const cellByWidth = Math.floor(availableWidth / CONFIG.GRID_WIDTH);
