@@ -391,6 +391,7 @@ function goToMainMenu() {
     document.getElementById('game-over').classList.add('hidden');
     document.getElementById('start-screen').classList.remove('hidden');
     game.letters = [];
+    particles.length = 0; // Clear particles
     render();
 }
 
@@ -449,9 +450,6 @@ function levelComplete() {
     updateScoreDisplay();
 
     audioManager.playWordComplete();
-
-    // Confetti!
-    triggerConfetti();
 
     // Clear letters from board during celebration
     game.letters = [];
@@ -549,14 +547,14 @@ function gameStep() {
             game.snake.pop(); // Don't grow from heart
             game.strikes = Math.max(0, game.strikes - 1);
             audioManager.playHeartCollect(); // Heart collect sound
-            spawnParticles(letter.x, letter.y); // Sparkle effect!
+            spawnShatterEffect(letter.x, letter.y, '#ff6b6b'); // Heart shatters red!
             updateStrikesDisplay();
             // Remove the heart from letters
             game.letters.splice(letterIndex, 1);
         } else if (letter.char === nextLetter) {
             // Correct letter!
             audioManager.playCorrectLetter();
-            spawnParticles(letter.x, letter.y); // Sparkle effect!
+            spawnShatterEffect(letter.x, letter.y, CONFIG.COLORS.letterBg); // Letter shatters!
             game.score += 10;
             game.currentLetterIndex++;
             updateScoreDisplay();
@@ -834,8 +832,10 @@ function render() {
         }
     });
 
-    // Render particles on top
-    updateAndRenderParticles();
+    // Render particles on top (if any exist)
+    if (particles.length > 0) {
+        updateAndRenderParticles();
+    }
 }
 
 // =============================================
@@ -1101,40 +1101,54 @@ function showFindingAnimal() {
 // Particle system for letter collection
 const particles = [];
 
-function spawnParticles(gridX, gridY) {
+function spawnShatterEffect(gridX, gridY, color) {
     const gridSize = CONFIG.GRID_SIZE * game.scale;
     const centerX = gridX * gridSize + gridSize / 2;
     const centerY = gridY * gridSize + gridSize / 2;
+    const radius = gridSize / 2 - 2;
 
-    // Spawn 10-15 sparkle particles
-    const count = 10 + Math.floor(Math.random() * 6);
+    // Burst into 14 fragments
+    const count = 14;
     for (let i = 0; i < count; i++) {
-        const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
-        const speed = 2 + Math.random() * 3;
+        // Imperfect angles
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.8;
+
+        // Start position: spread within the letter circle
+        const startDist = radius * (0.2 + Math.random() * 0.4);
+        const startX = centerX + Math.cos(angle) * startDist;
+        const startY = centerY + Math.sin(angle) * startDist;
+
+        // Slower speed, shorter travel
+        const speed = 1 + Math.random() * 1.2;
+
         particles.push({
-            x: centerX,
-            y: centerY,
-            vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed,
+            x: startX,
+            y: startY,
+            vx: Math.cos(angle) * speed + (Math.random() - 0.5) * 0.8,
+            vy: Math.sin(angle) * speed + (Math.random() - 0.5) * 0.8,
             life: 1,
-            decay: 0.02 + Math.random() * 0.02,
-            size: 4 + Math.random() * 4,
-            color: Math.random() > 0.5 ? '#fbbf24' : '#4ade80'
+            decay: 0.035 + Math.random() * 0.015, // Fade quicker = less travel
+            size: 7 + Math.random() * 5, // More pieces, slightly smaller
+            rotation: Math.random() * Math.PI * 2,
+            rotationSpeed: (Math.random() - 0.5) * 0.25,
+            color: color
         });
     }
 }
 
 function updateAndRenderParticles() {
+    if (!game.ctx || particles.length === 0) return;
+
     const ctx = game.ctx;
 
     for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
 
-        // Update
+        // Update position
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.1; // Gravity
         p.life -= p.decay;
+        p.rotation += p.rotationSpeed;
 
         // Remove dead particles
         if (p.life <= 0) {
@@ -1142,46 +1156,58 @@ function updateAndRenderParticles() {
             continue;
         }
 
-        // Render sparkle
+        // Render fragment as a circle
         ctx.save();
         ctx.globalAlpha = p.life;
         ctx.fillStyle = p.color;
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = 8;
 
-        // Draw star shape
+        const size = p.size * (0.6 + p.life * 0.4);
         ctx.beginPath();
-        const size = p.size * p.life;
-        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, size / 2, 0, Math.PI * 2);
         ctx.fill();
-
         ctx.restore();
     }
 }
 
 function triggerConfetti() {
-    // Center burst
+    // Big explosive center burst
     confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
+        particleCount: 150,
+        spread: 100,
+        startVelocity: 50,
+        gravity: 1.2,
+        origin: { y: 0.6 },
+        colors: ['#4ade80', '#fbbf24', '#22d3ee', '#f472b6', '#a78bfa']
     });
 
-    // Side cannons
+    // Quick side cannons
+    confetti({
+        particleCount: 80,
+        angle: 60,
+        spread: 60,
+        startVelocity: 55,
+        origin: { x: 0, y: 0.7 },
+        colors: ['#4ade80', '#fbbf24', '#fff']
+    });
+    confetti({
+        particleCount: 80,
+        angle: 120,
+        spread: 60,
+        startVelocity: 55,
+        origin: { x: 1, y: 0.7 },
+        colors: ['#4ade80', '#fbbf24', '#fff']
+    });
+
+    // Extra pop after tiny delay
     setTimeout(() => {
         confetti({
             particleCount: 50,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0 }
+            spread: 120,
+            startVelocity: 35,
+            origin: { y: 0.5 },
+            colors: ['#fff', '#fbbf24']
         });
-        confetti({
-            particleCount: 50,
-            angle: 120,
-            spread: 55,
-            origin: { x: 1 }
-        });
-    }, 200);
+    }, 100);
 }
 
 // =============================================
@@ -1247,8 +1273,19 @@ function initLottieAnimations() {
     }
 }
 
+// Smooth 60fps render loop
+let lastRenderTime = 0;
+function smoothRenderLoop(currentTime) {
+    // Always render at 60fps for smooth particles
+    if (game.isRunning || particles.length > 0) {
+        render();
+    }
+    requestAnimationFrame(smoothRenderLoop);
+}
+
 // Initialize when page loads
 window.addEventListener('DOMContentLoaded', () => {
     init();
     initLottieAnimations();
+    requestAnimationFrame(smoothRenderLoop); // Start smooth render loop
 });
