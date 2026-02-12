@@ -191,9 +191,9 @@ function resizeCanvas() {
     // Adjust available space based on layout
     let availableWidth, availableHeight;
     if (isMobileLandscape) {
-        // Sidebar takes ~110px, less vertical padding needed
-        availableWidth = viewportWidth - 140;
-        availableHeight = viewportHeight - 40;
+        // Sidebar takes ~110px, very little vertical space on phones
+        availableWidth = viewportWidth - 150;
+        availableHeight = viewportHeight - 80;
     } else {
         availableWidth = viewportWidth - 40;
         availableHeight = viewportHeight - 280;
