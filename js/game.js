@@ -10,9 +10,9 @@
 
 const CONFIG = {
     // Grid settings
-    GRID_SIZE: 28,          // Size of each grid cell in pixels (bigger!)
-    GRID_WIDTH: 22,         // Number of cells wide
-    GRID_HEIGHT: 16,        // Number of cells tall
+    GRID_SIZE: 38,          // Size of each grid cell in pixels (bigger!)
+    GRID_WIDTH: 16,         // Number of cells wide
+    GRID_HEIGHT: 12,        // Number of cells tall
 
     // Snake settings
     INITIAL_LENGTH: 3,
