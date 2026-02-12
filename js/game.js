@@ -549,12 +549,14 @@ function gameStep() {
             game.snake.pop(); // Don't grow from heart
             game.strikes = Math.max(0, game.strikes - 1);
             audioManager.playHeartCollect(); // Heart collect sound
+            spawnParticles(letter.x, letter.y); // Sparkle effect!
             updateStrikesDisplay();
             // Remove the heart from letters
             game.letters.splice(letterIndex, 1);
         } else if (letter.char === nextLetter) {
             // Correct letter!
             audioManager.playCorrectLetter();
+            spawnParticles(letter.x, letter.y); // Sparkle effect!
             game.score += 10;
             game.currentLetterIndex++;
             updateScoreDisplay();
@@ -574,6 +576,7 @@ function gameStep() {
             game.snake.pop();
             game.strikes++;
             audioManager.playWrongLetter();
+            triggerShake();
             updateStrikesDisplay();
 
             // Check if out of strikes
@@ -830,6 +833,9 @@ function render() {
             ctx.fill();
         }
     });
+
+    // Render particles on top
+    updateAndRenderParticles();
 }
 
 // =============================================
@@ -1017,12 +1023,26 @@ function scaleWordToFit() {
 }
 
 function updateScoreDisplay() {
-    document.getElementById('score').textContent = game.score;
+    const scoreEl = document.getElementById('score');
+    scoreEl.textContent = game.score;
+
+    // Trigger pop animation
+    scoreEl.classList.remove('pop');
+    void scoreEl.offsetWidth; // Force reflow to restart animation
+    scoreEl.classList.add('pop');
 }
 
 function updateStrikesDisplay() {
     const container = document.getElementById('strikes-display');
     container.innerHTML = '';
+
+    // Add danger class when only 1 life left
+    const livesRemaining = game.maxStrikes - game.strikes;
+    if (livesRemaining === 1) {
+        container.classList.add('danger');
+    } else {
+        container.classList.remove('danger');
+    }
 
     for (let i = 0; i < game.maxStrikes; i++) {
         const cross = document.createElement('span');
@@ -1035,6 +1055,15 @@ function updateStrikesDisplay() {
         }
         container.appendChild(cross);
     }
+}
+
+// Screen shake effect
+function triggerShake() {
+    const container = document.querySelector('.game-container');
+    container.classList.remove('shake');
+    void container.offsetWidth; // Force reflow
+    container.classList.add('shake');
+    setTimeout(() => container.classList.remove('shake'), 400);
 }
 
 function showHeaderCelebration() {
@@ -1068,6 +1097,67 @@ function showFindingAnimal() {
 // =============================================
 // EFFECTS
 // =============================================
+
+// Particle system for letter collection
+const particles = [];
+
+function spawnParticles(gridX, gridY) {
+    const gridSize = CONFIG.GRID_SIZE * game.scale;
+    const centerX = gridX * gridSize + gridSize / 2;
+    const centerY = gridY * gridSize + gridSize / 2;
+
+    // Spawn 10-15 sparkle particles
+    const count = 10 + Math.floor(Math.random() * 6);
+    for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
+        const speed = 2 + Math.random() * 3;
+        particles.push({
+            x: centerX,
+            y: centerY,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            life: 1,
+            decay: 0.02 + Math.random() * 0.02,
+            size: 4 + Math.random() * 4,
+            color: Math.random() > 0.5 ? '#fbbf24' : '#4ade80'
+        });
+    }
+}
+
+function updateAndRenderParticles() {
+    const ctx = game.ctx;
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+
+        // Update
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.1; // Gravity
+        p.life -= p.decay;
+
+        // Remove dead particles
+        if (p.life <= 0) {
+            particles.splice(i, 1);
+            continue;
+        }
+
+        // Render sparkle
+        ctx.save();
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 8;
+
+        // Draw star shape
+        ctx.beginPath();
+        const size = p.size * p.life;
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+    }
+}
 
 function triggerConfetti() {
     // Center burst
