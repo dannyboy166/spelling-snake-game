@@ -181,9 +181,12 @@ function resizeCanvas() {
     CONFIG.GRID_WIDTH = CONFIG.LANDSCAPE_COLS;
     CONFIG.GRID_HEIGHT = CONFIG.LANDSCAPE_ROWS;
 
-    // Get available space (leave room for header, controls, padding)
-    const availableWidth = window.innerWidth - 60;
-    const availableHeight = window.innerHeight - 300;
+    // Get available space - use smaller of innerWidth and clientWidth for Safari compatibility
+    const viewportWidth = Math.min(window.innerWidth, document.documentElement.clientWidth);
+    const viewportHeight = Math.min(window.innerHeight, document.documentElement.clientHeight);
+
+    const availableWidth = viewportWidth - 40;
+    const availableHeight = viewportHeight - 280;
 
     // Calculate cell size to fill available space
     const cellByWidth = Math.floor(availableWidth / CONFIG.GRID_WIDTH);
@@ -191,7 +194,7 @@ function resizeCanvas() {
     CONFIG.GRID_SIZE = Math.min(cellByWidth, cellByHeight);
 
     // Clamp cell size to reasonable range
-    CONFIG.GRID_SIZE = Math.max(25, Math.min(CONFIG.GRID_SIZE, 60));
+    CONFIG.GRID_SIZE = Math.max(20, Math.min(CONFIG.GRID_SIZE, 60));
 
     // Scale is always 1 now since we're adjusting cell size directly
     game.scale = 1;
