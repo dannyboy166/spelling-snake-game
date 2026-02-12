@@ -1219,7 +1219,7 @@ function spawnShatterEffect(gridX, gridY, color) {
             vy: Math.sin(angle) * speed + (Math.random() - 0.5) * 0.8,
             life: 1,
             decay: 0.035 + Math.random() * 0.015, // Fade quicker = less travel
-            size: 7 + Math.random() * 5, // More pieces, slightly smaller
+            size: 10 + Math.random() * 6, // Bigger pieces
             rotation: Math.random() * Math.PI * 2,
             rotationSpeed: (Math.random() - 0.5) * 0.25,
             color: color
