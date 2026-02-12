@@ -9,10 +9,16 @@
 // =============================================
 
 const CONFIG = {
-    // Grid settings
-    GRID_SIZE: 38,          // Size of each grid cell in pixels (bigger!)
-    GRID_WIDTH: 16,         // Number of cells wide
-    GRID_HEIGHT: 12,        // Number of cells tall
+    // Grid settings - these get set dynamically based on screen orientation
+    GRID_SIZE: 38,          // Size of each grid cell in pixels
+    GRID_WIDTH: 16,         // Number of cells wide (landscape default)
+    GRID_HEIGHT: 12,        // Number of cells tall (landscape default)
+
+    // Base grid dimensions for each orientation
+    LANDSCAPE_COLS: 16,
+    LANDSCAPE_ROWS: 12,
+    PORTRAIT_COLS: 12,
+    PORTRAIT_ROWS: 16,
 
     // Snake settings
     INITIAL_LENGTH: 3,
@@ -171,22 +177,38 @@ function init() {
 }
 
 function resizeCanvas() {
-    const baseWidth = CONFIG.GRID_SIZE * CONFIG.GRID_WIDTH;
-    const baseHeight = CONFIG.GRID_SIZE * CONFIG.GRID_HEIGHT;
+    // Only set orientation if game is NOT running (menu or game over)
+    if (!game.isRunning) {
+        const aspectRatio = window.innerWidth / window.innerHeight;
+        const isLandscape = aspectRatio > 1;
 
-    // Get available width (viewport width minus some padding)
-    const availableWidth = window.innerWidth - 40;
-
-    // Only scale down if screen is narrower than the game needs
-    if (availableWidth < baseWidth) {
-        game.scale = availableWidth / baseWidth;
-    } else {
-        game.scale = 1; // Full size on desktop
+        if (isLandscape) {
+            CONFIG.GRID_WIDTH = CONFIG.LANDSCAPE_COLS;
+            CONFIG.GRID_HEIGHT = CONFIG.LANDSCAPE_ROWS;
+        } else {
+            CONFIG.GRID_WIDTH = CONFIG.PORTRAIT_COLS;
+            CONFIG.GRID_HEIGHT = CONFIG.PORTRAIT_ROWS;
+        }
     }
 
+    // Get available space (leave room for header, controls, padding)
+    const availableWidth = window.innerWidth - 60;
+    const availableHeight = window.innerHeight - 300;
+
+    // Calculate cell size to fill available space
+    const cellByWidth = Math.floor(availableWidth / CONFIG.GRID_WIDTH);
+    const cellByHeight = Math.floor(availableHeight / CONFIG.GRID_HEIGHT);
+    CONFIG.GRID_SIZE = Math.min(cellByWidth, cellByHeight);
+
+    // Clamp cell size to reasonable range
+    CONFIG.GRID_SIZE = Math.max(25, Math.min(CONFIG.GRID_SIZE, 60));
+
+    // Scale is always 1 now since we're adjusting cell size directly
+    game.scale = 1;
+
     // Set canvas size
-    game.canvas.width = Math.floor(baseWidth * game.scale);
-    game.canvas.height = Math.floor(baseHeight * game.scale);
+    game.canvas.width = CONFIG.GRID_SIZE * CONFIG.GRID_WIDTH;
+    game.canvas.height = CONFIG.GRID_SIZE * CONFIG.GRID_HEIGHT;
 
     // Re-render if game exists
     if (game.ctx) {

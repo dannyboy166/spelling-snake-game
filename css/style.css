@@ -740,9 +740,16 @@ body {
 }
 
 .play-snake {
-    width: clamp(100px, 15vw, 120px);
-    height: clamp(100px, 15vw, 120px);
-    margin: 0 -20px;
+    width: clamp(80px, 15vw, 120px);
+    height: clamp(80px, 15vw, 120px);
+    margin: 0 -45px;
+}
+
+/* Hide snakes on very small screens */
+@media (max-width: 360px) {
+    .play-snake {
+        display: none;
+    }
 }
 
 #snake-right {
