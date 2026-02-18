@@ -92,11 +92,7 @@ const CONFIG = {
 
     // Difficulty progression (max word length by level ranges)
     DIFFICULTY: [
-        { minLevel: 1, maxLevel: 3, maxWordLength: 3 },    // CAT, DOG, etc.
-        { minLevel: 4, maxLevel: 6, maxWordLength: 4 },    // FISH, DUCK, etc.
-        { minLevel: 7, maxLevel: 10, maxWordLength: 5 },   // HORSE, SNAKE, etc.
-        { minLevel: 11, maxLevel: 15, maxWordLength: 6 },  // MONKEY, TURTLE, etc.
-        { minLevel: 16, maxLevel: 999, maxWordLength: 9 }  // All words
+        { minLevel: 1, maxLevel: 999, maxWordLength: 9 }   // All words available from start
     ]
 };
 
@@ -462,6 +458,10 @@ function showGameOverScreen() {
         box.classList.add('missed-final');
     });
 
+    // Reset title to Game Over (in case it was changed to victory)
+    document.getElementById('game-over-title').textContent = 'Game Over!';
+    document.getElementById('word-was-label').innerHTML = 'The word was: <span id="word-was" class="word-reveal"></span>';
+
     // Show the word they were trying to spell
     document.getElementById('word-was').textContent = game.currentAnimal.word;
 
@@ -470,6 +470,30 @@ function showGameOverScreen() {
     document.getElementById('animals-spelled').textContent = game.animalsSpelled;
 
     // Show game over screen
+    document.getElementById('game-over').classList.remove('hidden');
+}
+
+function showAllAnimalsComplete() {
+    // Stop the game
+    game.isPlaying = false;
+    clearInterval(game.gameLoop);
+
+    // Big celebration!
+    confetti({
+        particleCount: 200,
+        spread: 100,
+        origin: { y: 0.6 }
+    });
+
+    // Update title to victory message
+    document.getElementById('game-over-title').textContent = 'You Won! 🎉';
+    document.getElementById('word-was-label').innerHTML = 'You spelled all <span class="word-reveal">' + ANIMALS.length + ' animals!</span>';
+
+    // Update final score display
+    document.getElementById('final-score').textContent = game.score;
+    document.getElementById('animals-spelled').textContent = game.animalsSpelled;
+
+    // Show game over screen (as victory)
     document.getElementById('game-over').classList.remove('hidden');
 }
 
@@ -498,7 +522,16 @@ function levelComplete() {
 
         // Get new animal based on difficulty
         const maxLength = getMaxWordLength();
-        game.currentAnimal = getRandomAnimal(game.usedAnimals, maxLength);
+        const nextAnimal = getRandomAnimal(game.usedAnimals, maxLength);
+
+        // Check if all animals completed
+        if (nextAnimal === null) {
+            // Player spelled all animals - show victory!
+            showAllAnimalsComplete();
+            return;
+        }
+
+        game.currentAnimal = nextAnimal;
         game.usedAnimals.push(game.currentAnimal.word);
         game.currentLetterIndex = 0;
 
@@ -1014,10 +1047,7 @@ function handleTouchMove(e) {
 // UI UPDATES
 // =============================================
 
-// Store animal Lottie animations
-const ANIMAL_ANIMATIONS = {
-    'DOG': typeof DOG_ANIMATION !== 'undefined' ? DOG_ANIMATION : null
-};
+// ANIMAL_ANIMATIONS is defined in lottie-data.js
 
 let currentAnimalLottie = null;
 
@@ -1031,6 +1061,12 @@ function updateAnimalDisplay() {
         // Use Lottie
         emojiEl.classList.add('hidden');
         lottieEl.classList.add('active');
+        lottieEl.setAttribute('data-animal', word);
+
+        // Apply scale and offset from animal config
+        const scale = game.currentAnimal.scale || 3;
+        const offsetY = game.currentAnimal.offsetY || 5;
+        lottieEl.style.transform = `scale(${scale}) translateY(${offsetY}px)`;
 
         // Destroy previous animation if exists
         if (currentAnimalLottie) {
@@ -1393,5 +1429,33 @@ function smoothRenderLoop(currentTime) {
 window.addEventListener('DOMContentLoaded', () => {
     init();
     initLottieAnimations();
+    initCharacterVideo();
     requestAnimationFrame(smoothRenderLoop); // Start smooth render loop
 });
+
+// Initialize tappable character video
+function initCharacterVideo() {
+    const container = document.getElementById('character-container');
+    const video = document.getElementById('character-video');
+    const tapHint = document.getElementById('tap-hint');
+
+    if (!container || !video) return;
+
+    // Play video on tap/click
+    container.addEventListener('click', () => {
+        // Hide the hint after first tap
+        if (tapHint) tapHint.classList.add('hidden');
+
+        // Reset and play
+        video.currentTime = 0;
+        video.play();
+    });
+
+    // Also allow touch
+    container.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        if (tapHint) tapHint.classList.add('hidden');
+        video.currentTime = 0;
+        video.play();
+    });
+}
