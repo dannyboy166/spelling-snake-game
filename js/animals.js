@@ -9,14 +9,16 @@ const ANIMALS = [
     // scale: size multiplier (default 3), offsetY: pixels down (positive) or up (negative)
     { word: 'ANT', emoji: '🐜', scale: 2.4, offsetY: 5 },
     { word: 'CAT', emoji: '🐱', scale: 2.4, offsetY: 5 },
-    { word: 'PIG', emoji: '🐷', scale: 3, offsetY: 15 },
+    { word: 'DOG', emoji: '🐕', scale: 2.88, offsetY: 25 },
+    { word: 'PIG', emoji: '🐷', scale: 3.3, offsetY: 35 },
 
     // 4-letter words
     { word: 'FISH', emoji: '🐟', scale: 3, offsetY: 5 },
-    { word: 'GOAT', emoji: '🐐', scale: 2.4, offsetY: 5 },
+    { word: 'GOAT', emoji: '🐐', scale: 2.64, offsetY: 5 },
 
     // 5-letter words
-    { word: 'SHEEP', emoji: '🐑', scale: 3.9, offsetY: 23 }
+    { word: 'SHEEP', emoji: '🐑', scale: 4.68, offsetY: 63 },
+    { word: 'SNAKE', emoji: '🐍', scale: 2.4, offsetY: 5 }
 ];
 
 /**

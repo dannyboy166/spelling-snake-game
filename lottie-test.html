@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottie Size Comparison</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            color: white;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #4ade80;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #2d2d44;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+        }
+        .lottie-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            background: #3d3d5c;
+            border-radius: 10px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: visible;
+        }
+        .lottie-box {
+            width: 70px;
+            height: 70px;
+            transform-origin: center bottom;
+        }
+        .label {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+        .scale-info {
+            font-size: 14px;
+            color: #888;
+            margin-top: 5px;
+        }
+        .note {
+            text-align: center;
+            color: #888;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lottie Size Comparison (With Game Scales Applied)</h1>
+
+    <div class="grid">
+        <div class="card">
+            <div class="lottie-container">
+                <div class="lottie-box" id="ant" style="transform: scale(2.4);"></div>
+            </div>
+            <div class="label">ANT</div>
+            <div class="scale-info">scale: 2.4</div>
+        </div>
+        <div class="card">
+            <div class="lottie-container">
+                <div class="lottie-box" id="cat" style="transform: scale(2.4);"></div>
+            </div>
+            <div class="label">CAT</div>
+            <div class="scale-info">scale: 2.4</div>
+        </div>
+        <div class="card">
+            <div class="lottie-container">
+                <div class="lottie-box" id="dog" style="transform: scale(3.31) translateY(10px);"></div>
+            </div>
+            <div class="label">DOG</div>
+            <div class="scale-info">scale: 3.31, Y: 10px</div>
+        </div>
+        <div class="card">
+            <div class="lottie-container">
+                <div class="lottie-box" id="pig" style="transform: scale(3.63) translateY(9px);"></div>
+            </div>
+            <div class="label">PIG</div>
+            <div class="scale-info">scale: 3.63, Y: 9px</div>
+        </div>
+        <div class="card">
+            <div class="lottie-container">
+                <div class="lottie-box" id="fish" style="transform: scale(2.7);"></div>
+            </div>
+            <div class="label">FISH</div>
+            <div class="scale-info">scale: 2.7</div>
+        </div>
+        <div class="card">
+            <div class="lottie-container">
+                <div class="lottie-box" id="goat" style="transform: scale(2.64);"></div>
+            </div>
+            <div class="label">GOAT</div>
+            <div class="scale-info">scale: 2.64</div>
+        </div>
+        <div class="card">
+            <div class="lottie-container">
+                <div class="lottie-box" id="sheep" style="transform: scale(4.68) translateY(20px);"></div>
+            </div>
+            <div class="label">SHEEP</div>
+            <div class="scale-info">scale: 4.68, Y: 20px</div>
+        </div>
+        <div class="card">
+            <div class="lottie-container">
+                <div class="lottie-box" id="snake" style="transform: scale(2.4) translateY(3px);"></div>
+            </div>
+            <div class="label">SNAKE</div>
+            <div class="scale-info">scale: 2.4, Y: 3px</div>
+        </div>
+    </div>
+
+    <h2 style="text-align:center; color:#888; margin-top:40px;">Other Lotties (not in game yet)</h2>
+    <div class="grid">
+        <div class="card">
+            <div class="lottie-container">
+                <div class="lottie-box" id="sun" style="transform: scale(2.4);"></div>
+            </div>
+            <div class="label">SUN</div>
+            <div class="scale-info">scale: 2.4</div>
+        </div>
+        <div class="card">
+            <div class="lottie-container">
+                <div class="lottie-box" id="moon" style="transform: scale(2.4);"></div>
+            </div>
+            <div class="label">MOON</div>
+            <div class="scale-info">scale: 2.4</div>
+        </div>
+        <div class="card">
+            <div class="lottie-container">
+                <div class="lottie-box" id="bus" style="transform: scale(2.88) translateY(12px);"></div>
+            </div>
+            <div class="label">BUS</div>
+            <div class="scale-info">scale: 2.88, Y: 12px</div>
+        </div>
+        <div class="card">
+            <div class="lottie-container">
+                <div class="lottie-box" id="tree" style="transform: scale(3.6) translateY(12px);"></div>
+            </div>
+            <div class="label">TREE</div>
+            <div class="scale-info">scale: 3.6, Y: 12px</div>
+        </div>
+    </div>
+
+    <p class="note">Base: 70x70px containers with scale applied (same as game)</p>
+
+    <script src="js/lottie-data.js"></script>
+    <script>
+        const animals = ['ANT', 'CAT', 'DOG', 'PIG', 'FISH', 'GOAT', 'SHEEP', 'SNAKE'];
+
+        animals.forEach(animal => {
+            const container = document.getElementById(animal.toLowerCase());
+            if (container && ANIMAL_ANIMATIONS[animal]) {
+                lottie.loadAnimation({
+                    container: container,
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    animationData: ANIMAL_ANIMATIONS[animal]
+                });
+            }
+        });
+
+        // Load other Lotties
+        const others = ['SUN', 'MOON', 'BUS', 'TREE'];
+
+        others.forEach(name => {
+            const container = document.getElementById(name.toLowerCase());
+            if (container && OTHER_ANIMATIONS[name]) {
+                lottie.loadAnimation({
+                    container: container,
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    animationData: OTHER_ANIMATIONS[name]
+                });
+            }
+        });
+    </script>
+</body>
+</html>
