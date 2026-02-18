@@ -7,11 +7,13 @@
 const ANIMALS = [
     // 3-letter words
     // scale: size multiplier (default 3), offsetY: pixels down (positive) or up (negative)
+    { word: 'ANT', emoji: '🐜', scale: 2.4, offsetY: 5 },
     { word: 'CAT', emoji: '🐱', scale: 2.4, offsetY: 5 },
     { word: 'PIG', emoji: '🐷', scale: 3, offsetY: 15 },
 
     // 4-letter words
     { word: 'FISH', emoji: '🐟', scale: 3, offsetY: 5 },
+    { word: 'GOAT', emoji: '🐐', scale: 2.4, offsetY: 5 },
 
     // 5-letter words
     { word: 'SHEEP', emoji: '🐑', scale: 3.9, offsetY: 23 }

@@ -93,7 +93,16 @@ const CONFIG = {
     // Difficulty progression (max word length by level ranges)
     DIFFICULTY: [
         { minLevel: 1, maxLevel: 999, maxWordLength: 9 }   // All words available from start
-    ]
+    ],
+
+    // Difficulty levels (1-5 slider)
+    DIFFICULTY_LEVELS: {
+        1: { name: 'Easy',       initialSpeed: 350, minSpeed: 280, speedIncrease: 2 },
+        2: { name: 'Normal',     initialSpeed: 280, minSpeed: 220, speedIncrease: 2 },
+        3: { name: 'Medium',     initialSpeed: 210, minSpeed: 150, speedIncrease: 3 },  // Default
+        4: { name: 'Hard',       initialSpeed: 140, minSpeed: 90,  speedIncrease: 4 },
+        5: { name: 'Impossible', initialSpeed: 70,  minSpeed: 30,  speedIncrease: 5 }
+    }
 };
 
 // =============================================
@@ -140,6 +149,9 @@ const game = {
 
     // Current color theme
     currentTheme: 'default',
+
+    // Difficulty level (1-5)
+    difficultyLevel: 3,
 
     // Canvas scale for responsive sizing
     scale: 1,
@@ -205,6 +217,16 @@ function resizeCanvas() {
     }
 }
 
+function applyDifficultyLevel(level) {
+    const difficulty = CONFIG.DIFFICULTY_LEVELS[level];
+    if (!difficulty) return;
+
+    game.difficultyLevel = level;
+    CONFIG.INITIAL_SPEED = difficulty.initialSpeed;
+    CONFIG.MIN_SPEED = difficulty.minSpeed;
+    CONFIG.SPEED_INCREASE = difficulty.speedIncrease;
+}
+
 function setupEventListeners() {
     // Keyboard controls
     document.addEventListener('keydown', handleKeyDown);
@@ -244,6 +266,12 @@ function setupEventListeners() {
         document.getElementById('walls-wrap').classList.remove('active');
     });
 
+    // Difficulty slider
+    document.getElementById('difficulty-slider').addEventListener('input', (e) => {
+        const level = parseInt(e.target.value);
+        applyDifficultyLevel(level);
+    });
+
     // Main menu button
     document.getElementById('menu-btn').addEventListener('click', goToMainMenu);
 
@@ -255,10 +283,6 @@ function setupEventListeners() {
             document.body.style.background = color;
             document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
             swatch.classList.add('active');
-            // Update selected color button
-            document.getElementById('selected-color-btn').style.background = color;
-            // Collapse after selection
-            document.getElementById('bg-group').classList.remove('expanded');
         });
     });
 
@@ -270,33 +294,22 @@ function setupEventListeners() {
             applyTheme(themeName);
             document.querySelectorAll('#theme-buttons .theme-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            // Update selected theme preview
-            const selectedTheme = document.getElementById('selected-theme');
-            selectedTheme.innerHTML = btn.innerHTML;
-            // Collapse after selection
-            document.getElementById('theme-group').classList.remove('expanded');
         });
     });
 
-    // Collapsible setting headers
-    document.querySelectorAll('.setting-group.collapsible .setting-header').forEach(header => {
-        header.addEventListener('click', () => {
-            const group = header.parentElement;
-            // Close other expanded groups
-            document.querySelectorAll('.setting-group.collapsible.expanded').forEach(g => {
-                if (g !== group) g.classList.remove('expanded');
-            });
-            // Toggle this group
-            group.classList.toggle('expanded');
-        });
+    // Settings popup open/close
+    document.getElementById('settings-btn').addEventListener('click', () => {
+        document.getElementById('settings-popup').classList.remove('hidden');
     });
 
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.setting-group.collapsible')) {
-            document.querySelectorAll('.setting-group.collapsible.expanded').forEach(g => {
-                g.classList.remove('expanded');
-            });
+    document.getElementById('settings-close').addEventListener('click', () => {
+        document.getElementById('settings-popup').classList.add('hidden');
+    });
+
+    // Close popup when clicking outside content
+    document.getElementById('settings-popup').addEventListener('click', (e) => {
+        if (e.target.id === 'settings-popup') {
+            document.getElementById('settings-popup').classList.add('hidden');
         }
     });
 
@@ -363,6 +376,9 @@ function startGame() {
     audioManager.init();
     audioManager.playStart();
     audioManager.startBackgroundMusic();
+
+    // Apply current difficulty setting
+    applyDifficultyLevel(game.difficultyLevel);
 
     // Reset game state
     game.score = 0;
@@ -1376,6 +1392,7 @@ function getMaxWordLength() {
 let playButtonAnimation = null;
 let snakeLeftAnimation = null;
 let snakeRightAnimation = null;
+let settingsIconAnimation = null;
 
 function initLottieAnimations() {
     // Initialize play button animation
@@ -1387,6 +1404,18 @@ function initLottieAnimations() {
             loop: true,
             autoplay: true,
             animationData: PLAY_BUTTON_ANIMATION
+        });
+    }
+
+    // Initialize settings icon animation
+    const settingsIcon = document.getElementById('settings-icon');
+    if (settingsIcon && typeof lottie !== 'undefined' && typeof SETTINGS_ANIMATION !== 'undefined') {
+        settingsIconAnimation = lottie.loadAnimation({
+            container: settingsIcon,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            animationData: SETTINGS_ANIMATION
         });
     }
 
