@@ -612,7 +612,7 @@ function showGameOverScreen() {
 
     // Update final score display
     document.getElementById('final-score').textContent = game.score;
-    document.getElementById('animals-spelled').textContent = game.animalsSpelled;
+    document.getElementById('words-spelled').textContent = game.animalsSpelled;
 
     // Check and save high score
     const isNewHighScore = saveHighScore();
@@ -644,11 +644,11 @@ function showAllAnimalsComplete() {
 
     // Update title to victory message
     document.getElementById('game-over-title').textContent = 'You Won! 🎉';
-    document.getElementById('word-was-label').innerHTML = 'You spelled all <span class="word-reveal">' + ANIMALS.length + ' animals!</span>';
+    document.getElementById('word-was-label').innerHTML = 'You spelled all <span class="word-reveal">' + (game.useCustomWords ? game.customWordList.length : ANIMALS.length) + ' words!</span>';
 
     // Update final score display
     document.getElementById('final-score').textContent = game.score;
-    document.getElementById('animals-spelled').textContent = game.animalsSpelled;
+    document.getElementById('words-spelled').textContent = game.animalsSpelled;
 
     // Check and save high score
     const isNewHighScore = saveHighScore();
@@ -710,7 +710,7 @@ function levelComplete() {
         game.currentLetterIndex = 0;
 
         // Update UI with "searching" effect
-        showFindingAnimal();
+        showFindingWord();
 
         // After brief "finding" animation, spawn letters and continue
         setTimeout(() => {
@@ -1431,10 +1431,10 @@ function showHeaderCelebration() {
     emoji.classList.add('celebrating');
 }
 
-function showFindingAnimal() {
-    // Show "finding" state while searching for new animal
+function showFindingWord() {
+    // Show "finding" state while searching for new word
     const container = document.getElementById('word-letters');
-    container.innerHTML = '<div class="finding-text">Finding next animal...</div>';
+    container.innerHTML = '<div class="finding-text">Finding next word...</div>';
 
     // Show searching emoji
     const emoji = document.getElementById('animal-emoji');
