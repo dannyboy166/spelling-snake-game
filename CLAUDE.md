@@ -25,16 +25,16 @@ Refresh browser after file changes.
 
 ### Core Components
 
-1. **game.js** - Main game engine (~750 lines)
-   - `CONFIG` object: Grid settings (28px cells, 22x16 grid), speed, colors, difficulty tiers
-   - `game` object: Runtime state (snake, letters, score, strikes, etc.)
-   - Key functions: `init()`, `gameStep()`, `render()`, `spawnLetters()`
+1. **game.js** - Main game engine (~1680 lines)
+   - `CONFIG` object: Grid settings, speed, colors, difficulty tiers, themes
+   - `game` object: Runtime state (snake, letters, score, strikes, customWordList, etc.)
+   - Key functions: `init()`, `gameStep()`, `render()`, `spawnLetters()`, `parseURLParams()`
    - Touch + keyboard input (arrows, WASD, swipe, on-screen buttons)
+   - Text-to-Speech support for custom words
 
-2. **animals.js** - Word data (57 animals)
-   - Sorted by word length (3-9 letters)
-   - Format: `{ word: 'CAT', emoji: '🐱' }`
-   - `getRandomAnimal(excludeWords, maxLength)`: Gets unused animal within difficulty
+2. **animals.js** - Word data (12 words with Lottie animations)
+   - Format: `{ word: 'CAT', emoji: '🐱', scale: 2.16, offsetY: 10 }`
+   - `getRandomAnimal(excludeWords, maxLength)`: Gets unused word within difficulty
 
 3. **audio.js** - Sound effects via Web Audio API
    - `AudioManager` class with `playTone(frequency, duration, type, volume)`
@@ -100,6 +100,35 @@ playMySound() {
 ### Changing Colors
 
 Edit `CONFIG.COLORS` in `js/game.js`.
+
+## Teacher Portal
+
+The Teacher Portal (`teacher.html`) allows educators to create custom spelling word lists:
+
+### Features
+- Select from 12 animated words (ANT, BUS, CAT, DOG, FISH, GOAT, MOON, PIG, SHEEP, SNAKE, SUN, TREE)
+- Add custom words (any word - uses Text-to-Speech instead of animation)
+- Generate shareable game links with URL parameters
+- Save/load word lists to localStorage
+
+### URL Parameters
+The game accepts custom word lists via URL parameters:
+```
+index.html?words=CAT,DOG,HOUSE,APPLE
+```
+
+Words that exist in `ANIMALS` array show Lottie animations. Custom words show a 🔊 icon and use Web Speech API.
+
+### Key Files
+- `teacher.html` - Teacher Portal UI
+- `js/teacher-portal.js` - Portal logic (word selection, link generation, saved lists)
+- `css/teacher.css` - Portal styling
+
+### Functions in game.js
+- `parseURLParams()` - Reads `?words=` from URL
+- `buildCustomWordList()` - Creates word objects, marking which have Lottie
+- `getRandomCustomWord()` - Picks from custom list
+- `speakWord()` - Text-to-Speech for custom words
 
 ## Portal Integration (Future)
 

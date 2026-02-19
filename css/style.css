@@ -464,6 +464,46 @@ body {
     display: none;
 }
 
+/* Teacher Portal Link */
+.teacher-portal-link {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    z-index: 10;
+    transition: all 0.2s ease;
+}
+
+.teacher-portal-link:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.02);
+}
+
+.teacher-icon {
+    font-size: 18px;
+}
+
+/* TTS icon for custom words */
+.animal-emoji.tts-icon {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.animal-emoji.tts-icon:hover {
+    transform: scale(1.1);
+}
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }

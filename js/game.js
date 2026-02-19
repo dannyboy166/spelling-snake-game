@@ -159,8 +159,73 @@ const game = {
 
     // Touch handling
     touchStartX: 0,
-    touchStartY: 0
+    touchStartY: 0,
+
+    // Custom word list (from URL params - Teacher Portal)
+    customWordList: [],
+    useCustomWords: false
 };
+
+// =============================================
+// CUSTOM WORD LIST (URL PARAMS - TEACHER PORTAL)
+// =============================================
+
+function parseURLParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const wordsParam = urlParams.get('words');
+    if (wordsParam) {
+        const wordList = wordsParam.split(',').map(w => w.trim().toUpperCase()).filter(w => w.length > 0);
+        if (wordList.length > 0) {
+            game.customWordList = buildCustomWordList(wordList);
+            game.useCustomWords = true;
+            console.log('Custom word list loaded:', game.customWordList.map(w => w.word));
+        }
+    }
+}
+
+function buildCustomWordList(words) {
+    return words.map(word => {
+        // Check if this word exists in our ANIMALS array (has Lottie animation)
+        const existing = ANIMALS.find(a => a.word === word);
+        if (existing) {
+            return { ...existing, hasLottie: true };
+        }
+        // Custom word - will use Text-to-Speech
+        return { word: word, emoji: '🔊', scale: 2.16, offsetY: 10, hasLottie: false };
+    });
+}
+
+function getRandomCustomWord(excludeWords = []) {
+    const available = game.customWordList.filter(w => !excludeWords.includes(w.word));
+    if (available.length === 0) return null;
+    return available[Math.floor(Math.random() * available.length)];
+}
+
+// =============================================
+// TEXT-TO-SPEECH (FOR CUSTOM WORDS)
+// =============================================
+
+function speakWord(word) {
+    if ('speechSynthesis' in window) {
+        // Cancel any ongoing speech
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(`Spell the word: ${word}`);
+        utterance.rate = 0.85;
+        utterance.pitch = 1.1;
+        utterance.volume = 1.0;
+
+        // Try to use a friendly voice
+        const voices = window.speechSynthesis.getVoices();
+        const englishVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Female')) ||
+                            voices.find(v => v.lang.startsWith('en'));
+        if (englishVoice) {
+            utterance.voice = englishVoice;
+        }
+
+        window.speechSynthesis.speak(utterance);
+    }
+}
 
 // =============================================
 // HIGH SCORE SYSTEM
@@ -206,6 +271,9 @@ function init() {
         resizeCanvas();
         scaleWordToFit();
     });
+
+    // Parse URL parameters for custom word lists (Teacher Portal)
+    parseURLParams();
 
     // Load high score from localStorage
     loadHighScore();
@@ -464,9 +532,13 @@ function startLevel(isFirstLevel = false) {
         game.directionQueue = [];
     }
 
-    // Get new animal based on difficulty
-    const maxLength = getMaxWordLength();
-    game.currentAnimal = getRandomAnimal(game.usedAnimals, maxLength);
+    // Get new word - either from custom list or default animals
+    if (game.useCustomWords) {
+        game.currentAnimal = getRandomCustomWord(game.usedAnimals);
+    } else {
+        const maxLength = getMaxWordLength();
+        game.currentAnimal = getRandomAnimal(game.usedAnimals, maxLength);
+    }
     game.usedAnimals.push(game.currentAnimal.word);
     game.currentLetterIndex = 0;
 
@@ -617,13 +689,18 @@ function levelComplete() {
     setTimeout(() => {
         game.level++;
 
-        // Get new animal based on difficulty
-        const maxLength = getMaxWordLength();
-        const nextAnimal = getRandomAnimal(game.usedAnimals, maxLength);
+        // Get new word - either from custom list or default animals
+        let nextAnimal;
+        if (game.useCustomWords) {
+            nextAnimal = getRandomCustomWord(game.usedAnimals);
+        } else {
+            const maxLength = getMaxWordLength();
+            nextAnimal = getRandomAnimal(game.usedAnimals, maxLength);
+        }
 
-        // Check if all animals completed
+        // Check if all words completed
         if (nextAnimal === null) {
-            // Player spelled all animals - show victory!
+            // Player spelled all words - show victory!
             showAllAnimalsComplete();
             return;
         }
@@ -1155,9 +1232,31 @@ function updateAnimalDisplay() {
 
     // Check if we have a Lottie animation for this word (animals or other)
     const animationData = ANIMAL_ANIMATIONS[word] || (typeof OTHER_ANIMATIONS !== 'undefined' && OTHER_ANIMATIONS[word]);
-    if (animationData) {
+
+    // Check if this is a custom word without Lottie (use TTS)
+    if (game.currentAnimal.hasLottie === false) {
+        // Custom word - show speaker icon and use Text-to-Speech
+        emojiEl.classList.remove('hidden');
+        lottieEl.classList.remove('active');
+        emojiEl.textContent = '🔊';
+        emojiEl.classList.add('tts-icon');
+
+        // Destroy Lottie if was playing
+        if (currentAnimalLottie) {
+            currentAnimalLottie.destroy();
+            currentAnimalLottie = null;
+        }
+
+        // Speak the word
+        speakWord(word);
+
+        // Make emoji clickable to repeat
+        emojiEl.onclick = () => speakWord(word);
+    } else if (animationData) {
         // Use Lottie
         emojiEl.classList.add('hidden');
+        emojiEl.classList.remove('tts-icon');
+        emojiEl.onclick = null;
         lottieEl.classList.add('active');
         lottieEl.setAttribute('data-animal', word);
 
@@ -1182,6 +1281,8 @@ function updateAnimalDisplay() {
     } else {
         // Use emoji
         emojiEl.classList.remove('hidden');
+        emojiEl.classList.remove('tts-icon');
+        emojiEl.onclick = null;
         lottieEl.classList.remove('active');
         emojiEl.textContent = game.currentAnimal.emoji;
 

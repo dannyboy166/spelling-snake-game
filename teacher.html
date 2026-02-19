@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Portal - Spelling Snake</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/teacher.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <a href="index.html" class="back-link">
+                <span class="back-arrow">←</span>
+                <span>Back to Game</span>
+            </a>
+            <div class="logo">
+                <span class="logo-icon">👩‍🏫</span>
+                <div class="logo-text">
+                    <h1>Teacher Portal</h1>
+                    <p class="tagline">Create Custom Spelling Lists</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <!-- Step 1: Select animated words -->
+            <section class="card">
+                <div class="step-header">
+                    <span class="step-number">1</span>
+                    <h2>Select Words with Animations</h2>
+                </div>
+                <p class="card-description">These words have fun animated images in the game.</p>
+                <div class="word-grid" id="word-grid">
+                    <!-- Words will be inserted by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Step 2: Add custom words -->
+            <section class="card">
+                <div class="step-header">
+                    <span class="step-number">2</span>
+                    <h2>Add Custom Words (Optional)</h2>
+                </div>
+                <p class="card-description">Add your own spelling words. These will use voice audio instead of images.</p>
+                <div class="custom-input-group">
+                    <input type="text"
+                           id="custom-words-input"
+                           class="custom-input"
+                           placeholder="e.g. HOUSE, APPLE, SCHOOL, FRIEND"
+                           autocomplete="off"
+                           autocapitalize="characters">
+                    <small class="input-hint">Separate words with commas</small>
+                </div>
+                <div class="custom-words-preview hidden" id="custom-words-preview">
+                    <span class="preview-label">Custom words:</span>
+                    <div class="preview-tags" id="preview-tags"></div>
+                </div>
+            </section>
+
+            <!-- Step 3: Generate link -->
+            <section class="card">
+                <div class="step-header">
+                    <span class="step-number">3</span>
+                    <h2>Generate Game Link</h2>
+                </div>
+                <p class="card-description">Create a shareable link for your students.</p>
+
+                <div class="selected-summary" id="selected-summary">
+                    <span class="summary-label">Selected words:</span>
+                    <span class="summary-count" id="selected-count">0</span>
+                </div>
+
+                <button class="generate-btn" id="generate-btn">
+                    <span class="btn-icon">🔗</span>
+                    <span>Generate Link</span>
+                </button>
+
+                <div class="link-output hidden" id="link-output">
+                    <div class="link-box">
+                        <input type="text" id="game-link" class="link-input" readonly>
+                        <button class="copy-btn" id="copy-btn" title="Copy to clipboard">
+                            <span class="copy-icon">📋</span>
+                        </button>
+                    </div>
+                    <div class="link-actions">
+                        <button class="action-btn open-btn" id="open-btn">
+                            <span>🎮</span> Open Game
+                        </button>
+                        <button class="action-btn save-btn" id="save-btn">
+                            <span>💾</span> Save List
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Saved lists -->
+            <section class="card saved-lists-card" id="saved-lists-section">
+                <div class="step-header">
+                    <span class="step-number">★</span>
+                    <h2>Saved Word Lists</h2>
+                </div>
+                <div class="saved-lists" id="saved-lists">
+                    <!-- Saved lists will be inserted here -->
+                </div>
+                <p class="no-saved-lists hidden" id="no-saved-lists">No saved lists yet.</p>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Part of the <strong>SASCO Games</strong> collection for schools</p>
+        </footer>
+    </div>
+
+    <!-- Save dialog -->
+    <div class="dialog-overlay hidden" id="save-dialog">
+        <div class="dialog">
+            <h3>Save Word List</h3>
+            <input type="text" id="list-name-input" class="list-name-input" placeholder="e.g. Week 5 Spelling Words">
+            <div class="dialog-buttons">
+                <button class="dialog-btn cancel-btn" id="cancel-save">Cancel</button>
+                <button class="dialog-btn confirm-btn" id="confirm-save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/teacher-portal.js"></script>
+</body>
+</html>

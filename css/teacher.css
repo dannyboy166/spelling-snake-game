@@ -1,0 +1,694 @@
+/* =============================================
+   TEACHER PORTAL - STYLES
+   SASCO Green Theme
+   ============================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #4ade80;
+    --primary-dark: #22c55e;
+    --primary-light: #86efac;
+    --background: #7ab9f1;
+    --card-bg: #ffffff;
+    --text: #1a1a2e;
+    --text-muted: #666666;
+    --border: #e5e7eb;
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Fredoka', sans-serif;
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =============================================
+   HEADER
+   ============================================= */
+
+.header {
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.back-link {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 14px;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+}
+
+.back-link:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.back-arrow {
+    font-size: 16px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    font-size: 50px;
+}
+
+.logo-text h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+}
+
+.tagline {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* =============================================
+   MAIN CONTENT
+   ============================================= */
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* =============================================
+   CARDS
+   ============================================= */
+
+.card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px var(--shadow);
+}
+
+.step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.step-number {
+    width: 32px;
+    height: 32px;
+    background: var(--primary);
+    color: var(--text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.step-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.card-description {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+/* =============================================
+   WORD GRID
+   ============================================= */
+
+.word-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.word-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #f8f9fa;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.word-checkbox:hover {
+    border-color: var(--primary);
+    background: #f0fdf4;
+}
+
+.word-checkbox.selected {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    box-shadow: 0 2px 8px rgba(74, 222, 128, 0.3);
+}
+
+.checkbox-input {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #d1d5db;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.word-checkbox.selected .checkbox-custom {
+    background: var(--primary);
+    border-color: var(--primary-dark);
+}
+
+.word-checkbox.selected .checkbox-custom::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.word-emoji {
+    font-size: 24px;
+}
+
+.word-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* =============================================
+   CUSTOM WORDS INPUT
+   ============================================= */
+
+.custom-input-group {
+    margin-bottom: 16px;
+}
+
+.custom-input {
+    width: 100%;
+    padding: 14px 18px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.custom-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
+}
+
+.custom-input::placeholder {
+    color: #9ca3af;
+}
+
+.input-hint {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.custom-words-preview {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 12px 14px;
+}
+
+.preview-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 8px;
+}
+
+.preview-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.preview-tag {
+    padding: 6px 12px;
+    background: #fef3c7;
+    color: #92400e;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.preview-tag.has-animation {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.preview-tag.tts-word {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+/* =============================================
+   GENERATE LINK
+   ============================================= */
+
+.selected-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+.summary-label {
+    color: var(--text-muted);
+}
+
+.summary-count {
+    background: var(--primary);
+    color: var(--text);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+}
+
+.generate-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: var(--text);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 0 #16a34a;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #16a34a;
+}
+
+.generate-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 0 #16a34a;
+}
+
+.btn-icon {
+    font-size: 22px;
+}
+
+.link-output {
+    margin-top: 20px;
+}
+
+.link-box {
+    display: flex;
+    gap: 8px;
+}
+
+.link-input {
+    flex: 1;
+    padding: 14px 16px;
+    font-family: 'Fredoka', monospace;
+    font-size: 13px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: #f8f9fa;
+    color: var(--text);
+}
+
+.copy-btn {
+    padding: 14px 18px;
+    background: #f3f4f6;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+    background: #e5e7eb;
+}
+
+.copy-btn.copied {
+    background: var(--primary-light);
+    border-color: var(--primary);
+}
+
+.copy-icon {
+    font-size: 18px;
+}
+
+.link-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.open-btn {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+.save-btn {
+    background: #fef3c7;
+    border-color: #fcd34d;
+    color: var(--text);
+}
+
+/* =============================================
+   SAVED LISTS
+   ============================================= */
+
+.saved-lists {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.no-saved-lists {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 20px;
+}
+
+.saved-list-item {
+    background: #f8f9fa;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    transition: all 0.2s ease;
+}
+
+.saved-list-item:hover {
+    border-color: var(--primary);
+}
+
+.list-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.list-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.list-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    background: #e5e7eb;
+    padding: 2px 10px;
+    border-radius: 10px;
+}
+
+.list-words {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    word-break: break-word;
+}
+
+.list-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.list-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.load-btn {
+    background: #e5e7eb;
+    color: var(--text);
+}
+
+.load-btn:hover {
+    background: #d1d5db;
+}
+
+.play-btn {
+    background: var(--primary);
+    color: var(--text);
+}
+
+.play-btn:hover {
+    background: var(--primary-dark);
+}
+
+.delete-btn {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 8px 10px;
+}
+
+.delete-btn:hover {
+    background: #fecaca;
+}
+
+/* =============================================
+   SAVE DIALOG
+   ============================================= */
+
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.dialog {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.dialog h3 {
+    margin-bottom: 16px;
+    font-size: 20px;
+    color: var(--text);
+}
+
+.list-name-input {
+    width: 100%;
+    padding: 14px 16px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+    margin-bottom: 16px;
+}
+
+.list-name-input:focus {
+    border-color: var(--primary);
+}
+
+.dialog-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.dialog-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancel-btn {
+    background: #f3f4f6;
+    color: var(--text);
+}
+
+.cancel-btn:hover {
+    background: #e5e7eb;
+}
+
+.confirm-btn {
+    background: var(--primary);
+    color: var(--text);
+}
+
+.confirm-btn:hover {
+    background: var(--primary-dark);
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+
+.footer {
+    text-align: center;
+    padding: 24px;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.footer strong {
+    color: #ffffff;
+}
+
+/* =============================================
+   UTILITIES
+   ============================================= */
+
+.hidden {
+    display: none !important;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+
+@media (max-width: 600px) {
+    .header {
+        padding: 15px 10px;
+    }
+
+    .back-link {
+        position: static;
+        transform: none;
+        margin-bottom: 15px;
+        display: inline-flex;
+    }
+
+    .logo-text h1 {
+        font-size: 26px;
+    }
+
+    .tagline {
+        font-size: 14px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .word-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+    }
+
+    .word-checkbox {
+        padding: 10px 12px;
+    }
+
+    .word-emoji {
+        font-size: 20px;
+    }
+
+    .word-text {
+        font-size: 14px;
+    }
+
+    .link-actions {
+        flex-direction: column;
+    }
+}
