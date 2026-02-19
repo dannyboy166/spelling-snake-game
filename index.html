@@ -34,6 +34,10 @@
                 <div class="score-label">Score</div>
                 <div class="score-value" id="score">0</div>
             </div>
+            <div class="high-score-ingame">
+                <span class="trophy-icon-small">🏆</span>
+                <span id="ingame-high-score">0</span>
+            </div>
         </div>
 
         <!-- Game canvas -->
@@ -58,6 +62,13 @@
                     <span>🐱 Spell the <span class="highlight">animal name</span></span>
                     <span>⬆️ <span class="highlight">Arrow keys</span> or <span class="highlight">swipe</span></span>
                     <span>🐍 Snake <span class="highlight">grows longer</span>!</span>
+                </div>
+
+                <!-- High Score on main menu -->
+                <div class="high-score-display main-menu-high-score">
+                    <span class="trophy-icon">🏆</span>
+                    <span class="high-score-label">Best:</span>
+                    <span class="high-score-value" id="menu-high-score">0</span>
                 </div>
 
                 <!-- Settings button -->
@@ -174,6 +185,13 @@
                 <p class="word-was" id="word-was-label">The word was: <span id="word-was" class="word-reveal"></span></p>
                 <p>Final Score: <span id="final-score">0</span></p>
                 <p>Animals Spelled: <span id="animals-spelled">0</span></p>
+                <div class="high-score-gameover">
+                    <span class="trophy-icon">🏆</span>
+                    <span>Best: <span id="gameover-high-score">0</span></span>
+                </div>
+                <div class="new-high-score hidden" id="new-high-score">
+                    ⭐ NEW HIGH SCORE! ⭐
+                </div>
                 <div class="game-over-buttons">
                     <button class="start-btn" id="restart-btn">Play Again!</button>
                     <button class="menu-btn" id="menu-btn">Main Menu</button>

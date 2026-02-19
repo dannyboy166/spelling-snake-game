@@ -136,6 +136,7 @@ const game = {
     score: 0,
     level: 1,
     animalsSpelled: 0,
+    highScore: 0,
 
     // Lives/strikes system
     strikes: 0,
@@ -162,6 +163,35 @@ const game = {
 };
 
 // =============================================
+// HIGH SCORE SYSTEM
+// =============================================
+
+function loadHighScore() {
+    const saved = localStorage.getItem('spellingSnakeHighScore');
+    game.highScore = saved ? parseInt(saved, 10) : 0;
+    updateHighScoreDisplays();
+}
+
+function saveHighScore() {
+    if (game.score > game.highScore) {
+        game.highScore = game.score;
+        localStorage.setItem('spellingSnakeHighScore', game.highScore.toString());
+        return true; // New high score!
+    }
+    return false;
+}
+
+function updateHighScoreDisplays() {
+    const menuHighScore = document.getElementById('menu-high-score');
+    const ingameHighScore = document.getElementById('ingame-high-score');
+    const gameoverHighScore = document.getElementById('gameover-high-score');
+
+    if (menuHighScore) menuHighScore.textContent = game.highScore;
+    if (ingameHighScore) ingameHighScore.textContent = game.highScore;
+    if (gameoverHighScore) gameoverHighScore.textContent = game.highScore;
+}
+
+// =============================================
 // INITIALIZATION
 // =============================================
 
@@ -176,6 +206,9 @@ function init() {
         resizeCanvas();
         scaleWordToFit();
     });
+
+    // Load high score from localStorage
+    loadHighScore();
 
     // Set up event listeners
     setupEventListeners();
@@ -194,7 +227,7 @@ function resizeCanvas() {
     const viewportHeight = Math.min(window.innerHeight, document.documentElement.clientHeight);
 
     const availableWidth = viewportWidth - 40;
-    const availableHeight = viewportHeight - 280;
+    const availableHeight = viewportHeight - 220;
 
     // Calculate cell size to fill available space
     const cellByWidth = Math.floor(availableWidth / CONFIG.GRID_WIDTH);
@@ -202,7 +235,7 @@ function resizeCanvas() {
     CONFIG.GRID_SIZE = Math.min(cellByWidth, cellByHeight);
 
     // Clamp cell size to reasonable range
-    CONFIG.GRID_SIZE = Math.max(18, Math.min(CONFIG.GRID_SIZE, 60));
+    CONFIG.GRID_SIZE = Math.max(18, Math.min(CONFIG.GRID_SIZE, 80));
 
     // Scale is always 1 now since we're adjusting cell size directly
     game.scale = 1;
@@ -509,6 +542,18 @@ function showGameOverScreen() {
     document.getElementById('final-score').textContent = game.score;
     document.getElementById('animals-spelled').textContent = game.animalsSpelled;
 
+    // Check and save high score
+    const isNewHighScore = saveHighScore();
+    updateHighScoreDisplays();
+
+    // Show/hide new high score indicator
+    const newHighScoreEl = document.getElementById('new-high-score');
+    if (isNewHighScore) {
+        newHighScoreEl.classList.remove('hidden');
+    } else {
+        newHighScoreEl.classList.add('hidden');
+    }
+
     // Show game over screen
     document.getElementById('game-over').classList.remove('hidden');
 }
@@ -532,6 +577,18 @@ function showAllAnimalsComplete() {
     // Update final score display
     document.getElementById('final-score').textContent = game.score;
     document.getElementById('animals-spelled').textContent = game.animalsSpelled;
+
+    // Check and save high score
+    const isNewHighScore = saveHighScore();
+    updateHighScoreDisplays();
+
+    // Show/hide new high score indicator
+    const newHighScoreEl = document.getElementById('new-high-score');
+    if (isNewHighScore) {
+        newHighScoreEl.classList.remove('hidden');
+    } else {
+        newHighScoreEl.classList.add('hidden');
+    }
 
     // Show game over screen (as victory)
     document.getElementById('game-over').classList.remove('hidden');
@@ -1213,6 +1270,13 @@ function updateScoreDisplay() {
     scoreEl.classList.remove('pop');
     void scoreEl.offsetWidth; // Force reflow to restart animation
     scoreEl.classList.add('pop');
+
+    // Update in-game high score if current score beats it
+    if (game.score > game.highScore) {
+        game.highScore = game.score;
+        const ingameHighScore = document.getElementById('ingame-high-score');
+        if (ingameHighScore) ingameHighScore.textContent = game.highScore;
+    }
 }
 
 function updateStrikesDisplay() {

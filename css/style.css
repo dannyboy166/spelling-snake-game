@@ -300,6 +300,83 @@ body {
     100% { transform: scale(1); }
 }
 
+/* High Score - In-game */
+.high-score-ingame {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: #888;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.trophy-icon-small {
+    font-size: 14px;
+}
+
+/* High Score - Main Menu */
+.main-menu-high-score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 15px 0;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.1));
+    border: 2px solid rgba(251, 191, 36, 0.4);
+    border-radius: 20px;
+    font-size: 20px;
+}
+
+.trophy-icon {
+    font-size: 24px;
+}
+
+.high-score-label {
+    color: #888;
+    font-weight: 500;
+}
+
+.high-score-value {
+    color: #fbbf24;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+/* High Score - Game Over */
+.high-score-gameover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px 0;
+    font-size: 18px;
+    color: #fbbf24;
+}
+
+.new-high-score {
+    color: #4ade80;
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    margin: 10px 0;
+    animation: new-high-score-pulse 0.6s ease infinite alternate;
+}
+
+.new-high-score.hidden {
+    display: none;
+}
+
+@keyframes new-high-score-pulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.05); opacity: 0.8; }
+}
+
 /* =============================================
    GAME CANVAS
    ============================================= */
