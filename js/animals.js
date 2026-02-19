@@ -6,19 +6,26 @@
 
 const ANIMALS = [
     // 3-letter words
-    // scale: size multiplier (default 3), offsetY: pixels down (positive) or up (negative)
-    { word: 'ANT', emoji: '🐜', scale: 2.4, offsetY: 5 },
-    { word: 'CAT', emoji: '🐱', scale: 2.4, offsetY: 5 },
-    { word: 'DOG', emoji: '🐕', scale: 2.88, offsetY: 25 },
-    { word: 'PIG', emoji: '🐷', scale: 3.3, offsetY: 35 },
+    // scale: size multiplier, offsetY: pixels down (positive) or up (negative)
+    // Values perfected in lottie-test.html, then 10% smaller + 10px down
+    { word: 'ANT', emoji: '🐜', scale: 2.16, offsetY: 10 },
+    { word: 'CAT', emoji: '🐱', scale: 2.16, offsetY: 10 },
+    { word: 'DOG', emoji: '🐕', scale: 2.98, offsetY: 19 },
+    { word: 'PIG', emoji: '🐷', scale: 3.27, offsetY: 14 },
 
     // 4-letter words
-    { word: 'FISH', emoji: '🐟', scale: 3, offsetY: 5 },
-    { word: 'GOAT', emoji: '🐐', scale: 2.64, offsetY: 5 },
+    { word: 'FISH', emoji: '🐟', scale: 2.43, offsetY: 10 },
+    { word: 'GOAT', emoji: '🐐', scale: 2.38, offsetY: 10 },
 
     // 5-letter words
-    { word: 'SHEEP', emoji: '🐑', scale: 4.68, offsetY: 63 },
-    { word: 'SNAKE', emoji: '🐍', scale: 2.4, offsetY: 5 }
+    { word: 'SHEEP', emoji: '🐑', scale: 4.21, offsetY: 24 },
+    { word: 'SNAKE', emoji: '🐍', scale: 2.16, offsetY: 15 },
+
+    // Other words (not animals)
+    { word: 'SUN', emoji: '☀️', scale: 2.16, offsetY: 10 },
+    { word: 'BUS', emoji: '🚌', scale: 2.59, offsetY: 22 },
+    { word: 'MOON', emoji: '🌙', scale: 2.16, offsetY: 10 },
+    { word: 'TREE', emoji: '🌳', scale: 3.24, offsetY: 20 }
 ];
 
 /**

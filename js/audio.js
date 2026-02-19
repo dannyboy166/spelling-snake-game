@@ -7,7 +7,8 @@
 class AudioManager {
     constructor() {
         this.audioContext = null;
-        this.enabled = true;
+        this.sfxEnabled = true;
+        this.musicEnabled = false;
         this.bgMusic = null;
     }
 
@@ -27,6 +28,7 @@ class AudioManager {
      * Start background music
      */
     startBackgroundMusic() {
+        if (!this.musicEnabled) return;
         if (this.bgMusic) return; // Already playing
 
         this.bgMusic = new Audio('assets/audio/background-music.mp3?v=3');
@@ -50,7 +52,7 @@ class AudioManager {
      * Play a tone with specified parameters
      */
     playTone(frequency, duration, type = 'sine', volume = 0.3) {
-        if (!this.enabled || !this.audioContext) return;
+        if (!this.sfxEnabled || !this.audioContext) return;
 
         const oscillator = this.audioContext.createOscillator();
         const gainNode = this.audioContext.createGain();
@@ -130,11 +132,22 @@ class AudioManager {
     }
 
     /**
-     * Toggle sound on/off
+     * Toggle sound effects on/off
      */
-    toggle() {
-        this.enabled = !this.enabled;
-        return this.enabled;
+    toggleSfx(enabled) {
+        this.sfxEnabled = enabled;
+    }
+
+    /**
+     * Toggle music on/off
+     */
+    toggleMusic(enabled) {
+        this.musicEnabled = enabled;
+        if (enabled) {
+            this.startBackgroundMusic();
+        } else {
+            this.stopBackgroundMusic();
+        }
     }
 }
 

@@ -313,6 +313,30 @@ function setupEventListeners() {
         }
     });
 
+    // Music toggle
+    document.getElementById('music-on').addEventListener('click', () => {
+        audioManager.toggleMusic(true);
+        document.getElementById('music-on').classList.add('active');
+        document.getElementById('music-off').classList.remove('active');
+    });
+    document.getElementById('music-off').addEventListener('click', () => {
+        audioManager.toggleMusic(false);
+        document.getElementById('music-off').classList.add('active');
+        document.getElementById('music-on').classList.remove('active');
+    });
+
+    // Sound FX toggle
+    document.getElementById('sfx-on').addEventListener('click', () => {
+        audioManager.toggleSfx(true);
+        document.getElementById('sfx-on').classList.add('active');
+        document.getElementById('sfx-off').classList.remove('active');
+    });
+    document.getElementById('sfx-off').addEventListener('click', () => {
+        audioManager.toggleSfx(false);
+        document.getElementById('sfx-off').classList.add('active');
+        document.getElementById('sfx-on').classList.remove('active');
+    });
+
     // Prevent arrow key scrolling
     window.addEventListener('keydown', (e) => {
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
@@ -1072,8 +1096,9 @@ function updateAnimalDisplay() {
     const lottieEl = document.getElementById('animal-lottie');
     const word = game.currentAnimal.word;
 
-    // Check if we have a Lottie animation for this animal
-    if (ANIMAL_ANIMATIONS[word]) {
+    // Check if we have a Lottie animation for this word (animals or other)
+    const animationData = ANIMAL_ANIMATIONS[word] || (typeof OTHER_ANIMATIONS !== 'undefined' && OTHER_ANIMATIONS[word]);
+    if (animationData) {
         // Use Lottie
         emojiEl.classList.add('hidden');
         lottieEl.classList.add('active');
@@ -1095,7 +1120,7 @@ function updateAnimalDisplay() {
             renderer: 'svg',
             loop: true,
             autoplay: true,
-            animationData: ANIMAL_ANIMATIONS[word]
+            animationData: animationData
         });
     } else {
         // Use emoji
