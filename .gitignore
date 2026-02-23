@@ -1,0 +1,22 @@
+# API keys and secrets
+.env
+config.js
+*-config.js
+api-keys.js
+
+# Test files with sensitive data
+test-lipsync.js
+test-veo.js
+test-audio.mp3
+teacher-test.mp4
+teacher-veo.mp4
+
+# Generated videos
+*.mp4
+!assets/*.mp4
+
+# OS files
+.DS_Store
+
+# Node
+node_modules/

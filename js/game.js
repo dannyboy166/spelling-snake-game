@@ -167,6 +167,14 @@ const game = {
 };
 
 // =============================================
+// TEACHER VIDEO WORDS
+// =============================================
+// Words that have pre-generated teacher videos saying "Spell the word X"
+// Add words here as you generate videos with test-veo.js
+// Videos must be at: assets/teacher-videos/spell-{word}.webm (lowercase)
+const VIDEO_WORDS = ['CAT'];  // Add 'ANT' after generating that video
+
+// =============================================
 // CUSTOM WORD LIST (URL PARAMS - TEACHER PORTAL)
 // =============================================
 
@@ -185,13 +193,15 @@ function parseURLParams() {
 
 function buildCustomWordList(words) {
     return words.map(word => {
+        // Check if this word has a teacher video
+        const hasVideo = VIDEO_WORDS.includes(word);
         // Check if this word exists in our ANIMALS array (has Lottie animation)
         const existing = ANIMALS.find(a => a.word === word);
         if (existing) {
-            return { ...existing, hasLottie: true };
+            return { ...existing, hasLottie: true, hasVideo };
         }
         // Custom word - will use Text-to-Speech
-        return { word: word, emoji: '🔊', scale: 2.16, offsetY: 10, hasLottie: false };
+        return { word: word, emoji: '🔊', scale: 2.16, offsetY: 10, hasLottie: false, hasVideo };
     });
 }
 
@@ -537,7 +547,9 @@ function startLevel(isFirstLevel = false) {
         game.currentAnimal = getRandomCustomWord(game.usedAnimals);
     } else {
         const maxLength = getMaxWordLength();
-        game.currentAnimal = getRandomAnimal(game.usedAnimals, maxLength);
+        const animal = getRandomAnimal(game.usedAnimals, maxLength);
+        // Add hasVideo flag for non-custom words
+        game.currentAnimal = { ...animal, hasVideo: VIDEO_WORDS.includes(animal.word) };
     }
     game.usedAnimals.push(game.currentAnimal.word);
     game.currentLetterIndex = 0;
@@ -695,7 +707,9 @@ function levelComplete() {
             nextAnimal = getRandomCustomWord(game.usedAnimals);
         } else {
             const maxLength = getMaxWordLength();
-            nextAnimal = getRandomAnimal(game.usedAnimals, maxLength);
+            const animal = getRandomAnimal(game.usedAnimals, maxLength);
+            // Add hasVideo flag for non-custom words
+            nextAnimal = animal ? { ...animal, hasVideo: VIDEO_WORDS.includes(animal.word) } : null;
         }
 
         // Check if all words completed
@@ -1229,6 +1243,24 @@ function updateAnimalDisplay() {
     const emojiEl = document.getElementById('animal-emoji');
     const lottieEl = document.getElementById('animal-lottie');
     const word = game.currentAnimal.word;
+
+    // Show/hide teacher video based on whether this word has a video
+    const videoContainer = document.getElementById('character-container');
+    const video = document.getElementById('character-video');
+    if (videoContainer && video) {
+        if (game.currentAnimal.hasVideo) {
+            // Update video source and show
+            video.src = `assets/teacher-videos/spell-${word.toLowerCase()}.webm`;
+            video.load();
+            videoContainer.style.display = 'block';
+            // Auto-play the video
+            video.currentTime = 0;
+            video.play().catch(() => {}); // Ignore autoplay errors
+        } else {
+            // Hide video for words without teacher video
+            videoContainer.style.display = 'none';
+        }
+    }
 
     // Check if we have a Lottie animation for this word (animals or other)
     const animationData = ANIMAL_ANIMATIONS[word] || (typeof OTHER_ANIMATIONS !== 'undefined' && OTHER_ANIMATIONS[word]);
