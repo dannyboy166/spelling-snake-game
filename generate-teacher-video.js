@@ -45,7 +45,7 @@ function getDriveAccessToken() {
 }
 
 async function generateVeoVideo() {
-    console.log('Step 1/5: Generating video with Vertex AI Veo 3.1...');
+    console.log('Step 1/6: Generating video with Vertex AI Veo 3.1...');
 
     const accessToken = getAccessToken();
     const imagePath = path.join(__dirname, 'teacher-portrait.jpg');
@@ -119,38 +119,40 @@ async function pollForResult(operationName) {
 }
 
 function saveRawVideo(result) {
-    console.log('Step 2/5: Saving raw video...');
+    console.log('Step 2/6: Saving raw video...');
     const videos = result.videos;
     if (videos && videos[0] && videos[0].bytesBase64Encoded) {
         const videoBuffer = Buffer.from(videos[0].bytesBase64Encoded, 'base64');
-        const rawPath = path.join(__dirname, 'teacher-veo.mp4');
+        // Save raw video with proper name (keeping green screen version)
+        const rawPath = path.join(__dirname, 'assets', 'teacher-videos', `spell-${wordLower}-raw.mp4`);
         fs.writeFileSync(rawPath, videoBuffer);
-        console.log('   Saved teacher-veo.mp4');
+        console.log(`   Saved ${rawPath}`);
         return rawPath;
     }
     throw new Error('No video in API response');
 }
 
 function applyChromakey(inputPath) {
-    console.log('Step 3/5: Removing green screen...');
+    console.log('Step 3/6: Removing green screen...');
     const outputPath = path.join(__dirname, 'assets', 'teacher-videos', `spell-${wordLower}.webm`);
 
     execSync(`ffmpeg -y -i "${inputPath}" -vf "chromakey=0x00FF00:0.25:0.1" -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 1M -c:a libopus "${outputPath}"`, {
         stdio: 'pipe'
     });
 
-    // Clean up raw video
-    fs.unlinkSync(inputPath);
-
+    // Keep raw video (don't delete)
     console.log(`   Saved ${outputPath}`);
     return outputPath;
 }
 
-async function uploadToDrive(filePath) {
-    console.log('Step 4/5: Uploading to Google Drive...');
+async function uploadToDrive(filePath, stepNum = '4/6') {
+    const fileName = path.basename(filePath);
+    const isMP4 = filePath.endsWith('.mp4');
+    const mimeType = isMP4 ? 'video/mp4' : 'video/webm';
+
+    console.log(`Step ${stepNum}: Uploading ${fileName} to Google Drive...`);
 
     const accessToken = getDriveAccessToken();
-    const fileName = path.basename(filePath);
     const fileContent = fs.readFileSync(filePath);
 
     // Create multipart upload
@@ -161,7 +163,7 @@ async function uploadToDrive(filePath) {
     });
 
     const multipartBody = Buffer.concat([
-        Buffer.from(`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${metadata}\r\n--${boundary}\r\nContent-Type: video/webm\r\n\r\n`),
+        Buffer.from(`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${metadata}\r\n--${boundary}\r\nContent-Type: ${mimeType}\r\n\r\n`),
         fileContent,
         Buffer.from(`\r\n--${boundary}--`)
     ]);
@@ -183,12 +185,12 @@ async function uploadToDrive(filePath) {
     }
 
     const data = await response.json();
-    console.log(`   Uploaded to Drive: ${fileName} (ID: ${data.id})`);
+    console.log(`   Uploaded: ${fileName} (ID: ${data.id})`);
     return data;
 }
 
 function updateVideoWords() {
-    console.log('Step 5/5: Updating VIDEO_WORDS in game.js...');
+    console.log('Step 6/6: Updating VIDEO_WORDS in game.js...');
 
     const gameJsPath = path.join(__dirname, 'js', 'game.js');
     let content = fs.readFileSync(gameJsPath, 'utf-8');
@@ -220,23 +222,28 @@ async function main() {
         // Step 1: Generate video
         const result = await generateVeoVideo();
 
-        // Step 2: Save raw video
+        // Step 2: Save raw video (with green screen)
         const rawPath = saveRawVideo(result);
 
-        // Step 3: Apply chromakey
+        // Step 3: Apply chromakey (create transparent version)
         const finalPath = applyChromakey(rawPath);
 
-        // Step 4: Upload to Drive
-        await uploadToDrive(finalPath);
+        // Step 4: Upload raw MP4 to Drive
+        await uploadToDrive(rawPath, '4/6');
 
-        // Step 5: Update VIDEO_WORDS
+        // Step 5: Upload processed WebM to Drive
+        await uploadToDrive(finalPath, '5/6');
+
+        // Step 6: Update VIDEO_WORDS
         updateVideoWords();
 
         const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
         console.log(`\n========================================`);
         console.log(`SUCCESS! Video for "${WORD}" ready in ${elapsed}s`);
-        console.log(`Local: assets/teacher-videos/spell-${wordLower}.webm`);
-        console.log(`Drive: Uploaded to shared folder`);
+        console.log(`Local files:`);
+        console.log(`  - assets/teacher-videos/spell-${wordLower}-raw.mp4 (green screen)`);
+        console.log(`  - assets/teacher-videos/spell-${wordLower}.webm (transparent)`);
+        console.log(`Drive: Both versions uploaded`);
         console.log(`========================================\n`);
 
     } catch (error) {
