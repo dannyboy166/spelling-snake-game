@@ -384,9 +384,9 @@ function renderExpandedList(list, index) {
         const isSelected = listSelectedWords.has(word);
         const hasLottie = LOTTIE_WORDS.some(l => l.word === word);
         return `
-            <label class="list-word-checkbox ${isSelected ? 'selected' : ''}" onclick="event.stopPropagation()">
+            <label class="list-word-checkbox ${isSelected ? 'selected' : ''}">
                 <input type="checkbox" value="${word}" ${isSelected ? 'checked' : ''}
-                       onchange="toggleListWord('${word}', this.checked)">
+                       onchange="toggleListWord('${word}', this.checked); event.stopPropagation();">
                 <span class="word-label">${word}</span>
                 ${hasLottie ? '<span class="has-anim">✨</span>' : '<span class="has-tts">🔊</span>'}
             </label>
@@ -396,17 +396,17 @@ function renderExpandedList(list, index) {
     const selectedCount = listSelectedWords.size;
 
     return `
-        <div class="list-expanded-content" onclick="event.stopPropagation()">
+        <div class="list-expanded-content">
             <div class="list-select-actions">
-                <button class="select-action-btn" onclick="selectAllListWords(${index})">Select All</button>
-                <button class="select-action-btn" onclick="deselectAllListWords()">Deselect All</button>
+                <button class="select-action-btn" onclick="event.stopPropagation(); selectAllListWords(${index})">Select All</button>
+                <button class="select-action-btn" onclick="event.stopPropagation(); deselectAllListWords()">Deselect All</button>
                 <span class="selected-info">${selectedCount} selected</span>
             </div>
             <div class="list-words-grid">
                 ${wordsHtml}
             </div>
             <div class="list-use-actions">
-                <button class="use-selected-btn" onclick="useSelectedWords()" ${selectedCount === 0 ? 'disabled' : ''}>
+                <button class="use-selected-btn" onclick="event.stopPropagation(); useSelectedWords()" ${selectedCount === 0 ? 'disabled' : ''}>
                     Use ${selectedCount} Selected Words
                 </button>
             </div>
