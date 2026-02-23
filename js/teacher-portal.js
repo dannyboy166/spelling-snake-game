@@ -3,6 +3,238 @@
  * Allows teachers to create custom spelling word lists
  */
 
+// =============================================
+// SHARED LISTS (visible to everyone)
+// To add a new list: add it here and push to GitHub
+// =============================================
+const SHARED_LISTS = [
+    // ========== YEAR 2 CORE WORDS ==========
+    {
+        name: "Year 2 - Week 1",
+        words: ["ABOUT", "AFTER", "AGAIN", "ALONG", "ALSO", "ANY"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Week 2",
+        words: ["BECAUSE", "BEFORE", "BEST", "BEEN", "BETTER", "BROTHER"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Week 3",
+        words: ["CALLED", "CAME", "CHILDREN", "COMING", "COULD", "CRY"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Week 4",
+        words: ["DEAR", "DOES", "DOING", "DOOR", "EAT", "EVERY"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Week 5",
+        words: ["FACE", "FAST", "FIND", "FIRST", "FOUND", "FRIEND"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Week 6",
+        words: ["GAVE", "GIVE", "GOING", "GONE", "HALF", "HAPPY"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Week 7",
+        words: ["HEAD", "HEAR", "HOUSE", "INSIDE", "KIND", "LETTER"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Week 8",
+        words: ["LIVE", "LUNCH", "LONG", "MADE", "MAKE", "MANY"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Week 9",
+        words: ["MORNING", "MYSELF", "NAME", "NEVER", "NEW", "NEXT"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Week 10",
+        words: ["NICE", "NIGHT", "NOW", "OLD", "ONCE", "OPEN"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Days of Week",
+        words: ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Weekend + Numbers",
+        words: ["SATURDAY", "SUNDAY", "ONE", "TWO", "THREE", "FOUR", "FIVE"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Numbers 6-12",
+        words: ["SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE"],
+        author: "Year 2"
+    },
+    {
+        name: "Year 2 - Seasons",
+        words: ["SUMMER", "AUTUMN", "WINTER", "SPRING"],
+        author: "Year 2"
+    },
+
+    // ========== YEAR 3 CORE WORDS ==========
+    {
+        name: "Year 3 - Week 1",
+        words: ["ABLE", "ACROSS", "AGAINST", "AIR", "ALONG", "ALREADY"],
+        author: "Year 3"
+    },
+    {
+        name: "Year 3 - Week 2",
+        words: ["ANIMAL", "ANYTHING", "ASLEEP", "AUSTRALIA", "BEAUTIFUL", "BIRD"],
+        author: "Year 3"
+    },
+    {
+        name: "Year 3 - Week 3",
+        words: ["BOOK", "BOX", "BROUGHT", "CITY", "CLOTHES", "COLD"],
+        author: "Year 3"
+    },
+    {
+        name: "Year 3 - Week 4",
+        words: ["COLOUR", "CORNER", "DIFFERENT", "DOLLARS", "DURING", "EARLY"],
+        author: "Year 3"
+    },
+    {
+        name: "Year 3 - Week 5",
+        words: ["EVEN", "EVERYBODY", "EVERYTHING", "FEET", "FELT", "FINALLY"],
+        author: "Year 3"
+    },
+    {
+        name: "Year 3 - Week 6",
+        words: ["FLOOR", "GAMES", "GOES", "HAIR", "HARD", "HELLO"],
+        author: "Year 3"
+    },
+    {
+        name: "Year 3 - Week 7",
+        words: ["HIGH", "LARGE", "LEAVE", "LIGHT", "NOTHING", "OWN"],
+        author: "Year 3"
+    },
+    {
+        name: "Year 3 - Week 8",
+        words: ["PACKED", "PARENTS", "PEOPLE", "PERSON", "QUICKLY", "RAIN"],
+        author: "Year 3"
+    },
+    {
+        name: "Year 3 - Week 9",
+        words: ["RING", "SEEN", "SENT", "SHOULD", "SHOW", "SIDE"],
+        author: "Year 3"
+    },
+    {
+        name: "Year 3 - Week 10",
+        words: ["SLEPT", "SLOWLY", "SOMEONE", "SPACE", "STATION", "STAY"],
+        author: "Year 3"
+    },
+
+    // ========== DOLCH SIGHT WORDS ==========
+    {
+        name: "Dolch - Pre-K Set 1",
+        words: ["AND", "AWAY", "BIG", "BLUE", "CAN", "COME"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Pre-K Set 2",
+        words: ["DOWN", "FIND", "FOR", "FUNNY", "GO", "HELP"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Pre-K Set 3",
+        words: ["HERE", "IN", "IS", "IT", "JUMP", "LITTLE"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Pre-K Set 4",
+        words: ["LOOK", "MAKE", "ME", "MY", "NOT", "ONE"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Pre-K Set 5",
+        words: ["PLAY", "RED", "RUN", "SAID", "SEE", "THE"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Kindergarten 1",
+        words: ["ALL", "AM", "ARE", "AT", "ATE", "BE"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Kindergarten 2",
+        words: ["BLACK", "BROWN", "BUT", "CAME", "DID", "DO"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Kindergarten 3",
+        words: ["EAT", "FOUR", "GET", "GOOD", "HAVE", "HE"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Kindergarten 4",
+        words: ["INTO", "LIKE", "MUST", "NEW", "NO", "NOW"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Kindergarten 5",
+        words: ["ON", "OUR", "OUT", "PLEASE", "PRETTY", "RAN"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Grade 1 Set 1",
+        words: ["AFTER", "AGAIN", "AN", "ANY", "AS", "ASK"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Grade 1 Set 2",
+        words: ["BY", "COULD", "EVERY", "FLY", "FROM", "GIVE"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Grade 1 Set 3",
+        words: ["GOING", "HAD", "HAS", "HER", "HIM", "HIS"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Grade 2 Set 1",
+        words: ["ALWAYS", "AROUND", "BECAUSE", "BEEN", "BEFORE", "BEST"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Grade 2 Set 2",
+        words: ["BOTH", "BUY", "CALL", "COLD", "DOES", "FAST"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Grade 2 Set 3",
+        words: ["FIRST", "FIVE", "FOUND", "GAVE", "GOES", "GREEN"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Nouns Animals",
+        words: ["CAT", "DOG", "PIG", "FISH", "BIRD", "DUCK"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Nouns Home",
+        words: ["BED", "DOOR", "TABLE", "CHAIR", "FLOOR", "WINDOW"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Nouns Nature",
+        words: ["SUN", "TREE", "RAIN", "SNOW", "GRASS", "FLOWER"],
+        author: "Dolch"
+    },
+    {
+        name: "Dolch - Nouns Family",
+        words: ["MOTHER", "FATHER", "SISTER", "BROTHER", "BABY", "BOY", "GIRL"],
+        author: "Dolch"
+    }
+];
+
 // Words with Lottie animations available in the game
 const LOTTIE_WORDS = [
     { word: 'ANT', emoji: '🐜' },
@@ -24,14 +256,19 @@ let selectedWords = new Set();
 let customWords = [];
 let savedLists = [];
 
+// State for filtering
+let currentFilter = 'all';
+
 // =============================================
 // INITIALIZATION
 // =============================================
 
 function init() {
     renderWordCheckboxes();
+    renderSharedLists();
     loadSavedLists();
     setupEventListeners();
+    setupFilterButtons();
 }
 
 function renderWordCheckboxes() {
@@ -192,7 +429,107 @@ function openGame() {
 }
 
 // =============================================
-// SAVED LISTS
+// SHARED LISTS (Pre-made, visible to everyone)
+// =============================================
+
+function renderSharedLists() {
+    const container = document.getElementById('shared-lists');
+
+    const filteredLists = currentFilter === 'all'
+        ? SHARED_LISTS
+        : SHARED_LISTS.filter(list => list.author === currentFilter);
+
+    container.innerHTML = filteredLists.map((list, index) => {
+        const originalIndex = SHARED_LISTS.indexOf(list);
+        return `
+        <div class="saved-list-item shared-item" data-index="${originalIndex}">
+            <div class="list-info">
+                <span class="list-name">${list.name}</span>
+                <span class="list-count">${list.words.length} words</span>
+            </div>
+            <div class="list-words">${list.words.join(', ')}</div>
+            <div class="list-actions">
+                <button class="list-btn load-btn" onclick="loadSharedList(${originalIndex})" title="Load this list">
+                    Load
+                </button>
+                <button class="list-btn play-btn" onclick="playSharedList(${originalIndex})" title="Play now">
+                    🎮 Play
+                </button>
+            </div>
+        </div>
+    `}).join('');
+}
+
+function setupFilterButtons() {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.filter;
+            renderSharedLists();
+        });
+    });
+}
+
+function loadSharedList(index) {
+    const list = SHARED_LISTS[index];
+    if (!list) return;
+
+    // Clear current selections
+    selectedWords.clear();
+    document.querySelectorAll('.word-checkbox').forEach(label => {
+        const checkbox = label.querySelector('input');
+        checkbox.checked = false;
+        label.classList.remove('selected');
+    });
+
+    // Load Lottie words
+    list.words.forEach(word => {
+        const lottieWord = LOTTIE_WORDS.find(l => l.word === word);
+        if (lottieWord) {
+            selectedWords.add(word);
+            const checkbox = document.querySelector(`input[value="${word}"]`);
+            if (checkbox) {
+                checkbox.checked = true;
+                checkbox.closest('.word-checkbox').classList.add('selected');
+            }
+        }
+    });
+
+    // Load custom words
+    const customWordsList = list.words.filter(w => !LOTTIE_WORDS.some(l => l.word === w));
+    document.getElementById('custom-words-input').value = customWordsList.join(', ');
+    customWords = customWordsList;
+
+    // Update preview
+    const preview = document.getElementById('custom-words-preview');
+    const tagsContainer = document.getElementById('preview-tags');
+    if (customWords.length > 0) {
+        preview.classList.remove('hidden');
+        tagsContainer.innerHTML = customWords.map(word =>
+            `<span class="preview-tag tts-word">${word} 🔊</span>`
+        ).join('');
+    } else {
+        preview.classList.add('hidden');
+    }
+
+    updateSelectedCount();
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function playSharedList(index) {
+    const list = SHARED_LISTS[index];
+    if (!list) return;
+
+    const baseUrl = window.location.href.replace('teacher.html', 'index.html');
+    const url = `${baseUrl}?words=${list.words.join(',')}`;
+    window.open(url, '_blank');
+}
+
+// =============================================
+// SAVED LISTS (Personal, localStorage)
 // =============================================
 
 function loadSavedLists() {

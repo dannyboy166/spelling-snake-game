@@ -98,12 +98,34 @@
                 </div>
             </section>
 
-            <!-- Saved lists -->
+            <!-- Shared lists (visible to everyone) -->
+            <section class="card shared-lists-card">
+                <div class="step-header">
+                    <span class="step-number">📚</span>
+                    <h2>Shared Word Lists</h2>
+                </div>
+                <p class="card-description">Pre-made lists for all teachers. Click "Load" to use, or "Play" to start immediately.</p>
+
+                <!-- Filter buttons -->
+                <div class="list-filters" id="list-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="Year 2">Year 2</button>
+                    <button class="filter-btn" data-filter="Year 3">Year 3</button>
+                    <button class="filter-btn" data-filter="Dolch">Dolch</button>
+                </div>
+
+                <div class="shared-lists" id="shared-lists">
+                    <!-- Shared lists will be inserted here -->
+                </div>
+            </section>
+
+            <!-- Personal saved lists -->
             <section class="card saved-lists-card" id="saved-lists-section">
                 <div class="step-header">
-                    <span class="step-number">★</span>
-                    <h2>Saved Word Lists</h2>
+                    <span class="step-number">💾</span>
+                    <h2>My Saved Lists</h2>
                 </div>
+                <p class="card-description">Your personal lists (saved on this device only).</p>
                 <div class="saved-lists" id="saved-lists">
                     <!-- Saved lists will be inserted here -->
                 </div>

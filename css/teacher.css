@@ -438,6 +438,54 @@ body {
 }
 
 /* =============================================
+   SHARED LISTS & FILTERS
+   ============================================= */
+
+.list-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    background: #f3f4f6;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    border-color: var(--primary-dark);
+    color: var(--text);
+}
+
+.shared-lists {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.shared-item {
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    border-color: var(--primary-light);
+}
+
+/* =============================================
    SAVED LISTS
    ============================================= */
 
