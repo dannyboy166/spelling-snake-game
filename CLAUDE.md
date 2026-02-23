@@ -141,175 +141,112 @@ For SASCO portal integration:
 
 The game features an animated teacher character that says "Spell the word X" using AI-generated lip-sync videos.
 
+### One-Command Video Generation
+
+```bash
+node generate-teacher-video.js WORD
+```
+
+This single command does everything:
+1. Generates video with Vertex AI Veo 3.1 (~45 seconds)
+2. Saves raw MP4 (with green screen) locally
+3. Removes green screen → transparent WebM
+4. Uploads raw MP4 to Google Drive
+5. Uploads processed WebM to Google Drive
+6. Updates `VIDEO_WORDS` in game.js automatically
+
+**Example:**
+```bash
+node generate-teacher-video.js ELEPHANT
+# ~65 seconds later: video ready, uploaded, and registered!
+```
+
 ### Technology Stack
 - **Google Vertex AI Veo 3.1** - Image-to-video with lip-sync (~$0.60 per 4-second video, NO daily limits)
 - **ffmpeg chromakey** - Green screen removal with alpha transparency
+- **Google Drive API** - Automatic backup of all videos
 - **WebM VP9** - Output format with alpha channel support
-
-### Source Files
-- `teacher_full.PNG` - Original teacher image (1024x1536, green screen background)
-- `teacher-portrait.jpg` - Prepared 9:16 image for Veo
-- `test-veo-vertex.js` - Video generation script (Vertex AI - NO rate limits)
-- `test-veo.js` - Old script using AI Studio (has 10/day limit - don't use)
 
 ### Prerequisites (One-time Setup)
 
 1. **Google Cloud Project**: `sasco-project`
-2. **gcloud CLI** installed: `brew install google-cloud-sdk`
-3. **Authenticated**: `gcloud auth login`
-4. **Vertex AI API enabled** on the project
+2. **gcloud CLI**: `brew install google-cloud-sdk`
+3. **Authenticate for Vertex AI**:
+   ```bash
+   /opt/homebrew/share/google-cloud-sdk/bin/gcloud auth login
+   ```
+4. **Authenticate for Google Drive**:
+   ```bash
+   /opt/homebrew/share/google-cloud-sdk/bin/gcloud auth application-default login \
+     --scopes="https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/drive.file"
+   ```
+5. **APIs enabled**: Vertex AI API, Google Drive API
 
-### Complete Workflow to Generate a New Teacher Video
+### File Outputs
 
-#### Step 1: Edit the Prompt in test-veo-vertex.js
+For each word, the script creates:
 
-Change the word in the prompt (line ~133):
-```javascript
-const prompt = `The animated teacher character speaks to the camera and says "Spell the word YOUR_WORD". She has friendly expressions and natural lip movements as she speaks slowly and clearly. She gestures gently with her hands while talking.`;
-```
+| File | Location | Description |
+|------|----------|-------------|
+| `spell-{word}-raw.mp4` | `assets/teacher-videos/` | Original with green screen |
+| `spell-{word}.webm` | `assets/teacher-videos/` | Transparent background |
+| Both files | Google Drive | Backed up to shared folder |
 
-#### Step 2: Generate Video with Vertex AI
-
-```bash
-node test-veo-vertex.js
-```
-
-This will:
-- Get OAuth token from gcloud CLI
-- Send image + prompt to Vertex AI Veo 3.1
-- Poll until video is ready (~45-60 seconds)
-- Save as `teacher-veo.mp4`
-
-#### Step 3: Remove Green Screen & Convert to WebM
-
-```bash
-ffmpeg -y -i teacher-veo.mp4 \
-  -vf "chromakey=0x00FF00:0.25:0.1" \
-  -c:v libvpx-vp9 \
-  -pix_fmt yuva420p \
-  -b:v 1M \
-  -c:a libopus \
-  assets/teacher-videos/spell-WORD.webm
-```
-
-**Chromakey settings explained:**
-- `0x00FF00` - Pure green color
-- `0.25` - Similarity threshold (how much green to remove)
-- `0.1` - Blend amount (softness of edges)
-
-**If teacher is too transparent:** Lower similarity (try 0.2:0.08)
-**If green outlines visible:** Raise similarity (try 0.3:0.12)
-
-#### Step 4: Add to VIDEO_WORDS
-
-Edit `js/game.js`:
-```javascript
-const VIDEO_WORDS = ['ANT', 'CAT', 'YOUR_WORD'];  // Add your word (uppercase)
-```
-
-#### Step 5: Test
-
-```bash
-open "index.html?words=YOUR_WORD"
-```
-
-### Quick Reference Commands
-
-```bash
-# 1. Generate video (edit prompt first!)
-node test-veo-vertex.js
-
-# 2. Remove green screen & convert (replace WORD)
-ffmpeg -y -i teacher-veo.mp4 \
-  -vf "chromakey=0x00FF00:0.25:0.1" \
-  -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 1M -c:a libopus \
-  assets/teacher-videos/spell-WORD.webm
-
-# 3. Clean up temp file
-rm teacher-veo.mp4
-
-# 4. Add word to VIDEO_WORDS in js/game.js
-
-# 5. Test in game
-open "index.html?words=WORD"
-```
-
-### Video Duration
-- **Supported**: 4, 6, or 8 seconds (minimum 4)
-- **Recommended**: 4 seconds for "Spell the word X" videos
-- Set in `test-veo-vertex.js` → `parameters.durationSeconds: 4`
+### Video Settings
+- **Duration**: 4 seconds (minimum supported by Veo)
+- **Aspect Ratio**: 9:16 (vertical/portrait)
+- **Chromakey**: `0x00FF00:0.25:0.1` (green removal settings)
 
 ### Costs
 - **Vertex AI Veo 3.1**: ~$0.15/second = ~$0.60 per 4-second video
 - **No daily limits** (unlike AI Studio's 10/day)
 - 100 words ≈ $60
 
-### Video Storage
-- Location: `assets/teacher-videos/`
-- Naming: `spell-{word}.webm` (e.g., `spell-cat.webm`)
-- Format: WebM with VP9 codec and alpha transparency
+### How Videos Work in the Game
 
-### Registering Videos in the Game
-
-After creating a video, you must add the word to `VIDEO_WORDS` in `js/game.js`:
+Videos are controlled by `VIDEO_WORDS` array in `js/game.js`:
 
 ```javascript
-// Near top of game.js (line ~175)
-const VIDEO_WORDS = ['ANT', 'CAT'];  // Add your word here (uppercase)
+const VIDEO_WORDS = ['ANT', 'BUS', 'CAT', 'DOG', 'FISH', 'GOAT', 'PIG'];
 ```
 
-**How it works:**
-- The teacher video only appears for words in `VIDEO_WORDS`
-- Video auto-plays when a word starts
-- For words without videos, no teacher appears
-- Works with both default game and Teacher Portal custom lists
+- Teacher video **only appears** for words in this list
+- Video **auto-plays** when a word starts
+- For words **without** videos, no teacher appears
+- The automation script **updates this list automatically**
 
-### Complete Steps to Add a New Word
+### Source Files
+- `teacher-portrait.jpg` - Prepared 9:16 image for Veo (green screen background)
+- `generate-teacher-video.js` - **Main automation script** (use this!)
+- `test-veo-vertex.js` - Manual testing script (for debugging)
 
-1. **Edit prompt** in `test-veo-vertex.js` - change word in the prompt string
-2. **Run** `node test-veo-vertex.js` - generates `teacher-veo.mp4` (~60 seconds)
-3. **Remove green screen & convert:**
-   ```bash
-   ffmpeg -y -i teacher-veo.mp4 \
-     -vf "chromakey=0x00FF00:0.25:0.1" \
-     -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 1M -c:a libopus \
-     assets/teacher-videos/spell-YOURWORD.webm
-   ```
-4. **Clean up:** `rm teacher-veo.mp4`
-5. **Add to VIDEO_WORDS** in `js/game.js`
-6. **Test** with `open "index.html?words=YOURWORD"`
-
-### Prepared Image (Already Done)
-
-The image `teacher-portrait.jpg` is already prepared with:
-- 9:16 aspect ratio (1024x1820)
-- Green padding on TOP
-- Teacher at BOTTOM of frame
-
-**You don't need to redo this** unless you change the teacher character.
-
-If you ever need to recreate it from `teacher_full.PNG`:
-```python
-from PIL import Image
-img = Image.open('teacher_full.PNG')
-width, height = img.size
-green = img.getpixel((10, 10))
-target_height = int(width * 16 / 9)
-new_img = Image.new('RGB', (width, target_height), green[:3])
-new_img.paste(img, (0, target_height - height))  # Teacher at bottom
-new_img.save('teacher-portrait.jpg', 'JPEG', quality=95)
-```
+### Google Drive Backup
+- **Folder ID**: `1Q23m9itexQBMdzbMTKmDpk8Dzh-AUzxF`
+- All videos automatically uploaded when generated
+- Both raw MP4 and processed WebM versions saved
 
 ### Troubleshooting
 
 | Problem | Solution |
 |---------|----------|
-| Teacher too transparent | Lower similarity: `chromakey=0x00FF00:0.2:0.08` |
-| Green outlines visible | Raise similarity: `chromakey=0x00FF00:0.3:0.12` |
-| Hands cut off | Add more green padding to sides of source image |
-| Teacher floating (not at bottom) | Put all green padding on TOP of image |
+| Teacher too transparent | Edit chromakey in script: `0.2:0.08` |
+| Green outlines visible | Edit chromakey in script: `0.3:0.12` |
 | gcloud auth error | Run `gcloud auth login` |
+| Drive upload fails | Run the application-default login command above |
 | 401 Unauthenticated | Token expired, re-run script (gets fresh token) |
+
+### Manual Chromakey (if needed)
+
+If you need to manually process a video:
+```bash
+ffmpeg -y -i input.mp4 \
+  -vf "chromakey=0x00FF00:0.25:0.1" \
+  -c:v libvpx-vp9 \
+  -pix_fmt yuva420p \
+  -b:v 1M \
+  -c:a libopus \
+  output.webm
+```
 
 ## External Dependencies
 
