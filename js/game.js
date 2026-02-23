@@ -172,7 +172,7 @@ const game = {
 // Words that have pre-generated teacher videos saying "Spell the word X"
 // Add words here as you generate videos with test-veo.js
 // Videos must be at: assets/teacher-videos/spell-{word}.webm (lowercase)
-const VIDEO_WORDS = ['ANT', 'BUS', 'CAT', 'DOG', 'FISH', 'PIG'];  // Words with pre-generated teacher videos
+const VIDEO_WORDS = ['ANT', 'BUS', 'CAT', 'DOG', 'FISH', 'GOAT', 'PIG'];  // Words with pre-generated teacher videos
 
 // =============================================
 // CUSTOM WORD LIST (URL PARAMS - TEACHER PORTAL)
