@@ -142,95 +142,106 @@ For SASCO portal integration:
 The game features an animated teacher character that says "Spell the word X" using AI-generated lip-sync videos.
 
 ### Technology Stack
-- **Google Veo 3.1 Fast** - Image-to-video with lip-sync (~$0.60 per 4-second video)
+- **Google Vertex AI Veo 3.1** - Image-to-video with lip-sync (~$0.60 per 4-second video, NO daily limits)
 - **ffmpeg chromakey** - Green screen removal with alpha transparency
 - **WebM VP9** - Output format with alpha channel support
 
 ### Source Files
 - `teacher_full.PNG` - Original teacher image (1024x1536, green screen background)
-- `teacher-portrait.jpg` - Prepared 9:16 image for Veo (auto-generated)
-- `test-veo.js` - Video generation script
+- `teacher-portrait.jpg` - Prepared 9:16 image for Veo
+- `test-veo-vertex.js` - Video generation script (Vertex AI - NO rate limits)
+- `test-veo.js` - Old script using AI Studio (has 10/day limit - don't use)
+
+### Prerequisites (One-time Setup)
+
+1. **Google Cloud Project**: `sasco-project`
+2. **gcloud CLI** installed: `brew install google-cloud-sdk`
+3. **Authenticated**: `gcloud auth login`
+4. **Vertex AI API enabled** on the project
 
 ### Complete Workflow to Generate a New Teacher Video
 
-#### Step 1: Edit the Prompt in test-veo.js
+#### Step 1: Edit the Prompt in test-veo-vertex.js
 
-Change the word in the prompt (line ~96):
+Change the word in the prompt (line ~133):
 ```javascript
 const prompt = `The animated teacher character speaks to the camera and says "Spell the word YOUR_WORD". She has friendly expressions and natural lip movements as she speaks slowly and clearly. She gestures gently with her hands while talking.`;
 ```
 
-#### Step 2: Generate Video with Veo API
+#### Step 2: Generate Video with Vertex AI
 
-```javascript
-// test-veo.js - Key parts
-
-const GOOGLE_API_KEY = 'your-api-key';  // Google AI Studio API key
-
-// API endpoint
-const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-fast-generate-preview:predictLongRunning';
-
-// Request body
-{
-    instances: [{
-        prompt: `The animated teacher character speaks to the camera and says "Spell the word ${word}". She has friendly expressions and natural lip movements as she speaks slowly and clearly. She gestures gently with her hands while talking.`,
-        image: {
-            bytesBase64Encoded: base64Image,  // Your portrait image
-            mimeType: 'image/jpeg'
-        }
-    }],
-    parameters: {
-        aspectRatio: '9:16',      // Portrait mode
-        durationSeconds: 4        // Options: 4, 6, or 8
-    }
-}
+```bash
+node test-veo-vertex.js
 ```
 
-Run: `node test-veo.js`
+This will:
+- Get OAuth token from gcloud CLI
+- Send image + prompt to Vertex AI Veo 3.1
+- Poll until video is ready (~45-60 seconds)
+- Save as `teacher-veo.mp4`
 
-Output: `teacher-veo.mp4`
-
-#### Step 3: Remove Green Screen with ffmpeg
+#### Step 3: Remove Green Screen & Convert to WebM
 
 ```bash
 ffmpeg -y -i teacher-veo.mp4 \
-  -vf "chromakey=0x3bba35:0.15:0.05,crop=in_w-20:in_h-20:10:10" \
+  -vf "chromakey=0x00FF00:0.25:0.1" \
   -c:v libvpx-vp9 \
   -pix_fmt yuva420p \
-  -b:v 2M \
-  assets/teacher-videos/spell-cat.webm
+  -b:v 1M \
+  -c:a libopus \
+  assets/teacher-videos/spell-WORD.webm
 ```
 
 **Chromakey settings explained:**
-- `0x3bba35` - The green color (sample from your image corner)
-- `0.15` - Similarity threshold (lower = less aggressive, keeps more detail)
-- `0.05` - Blend amount (softness of edges)
-- `crop=in_w-20:in_h-20:10:10` - Removes 10px border (green edge artifacts)
+- `0x00FF00` - Pure green color
+- `0.25` - Similarity threshold (how much green to remove)
+- `0.1` - Blend amount (softness of edges)
 
-**If teacher is invisible:** Reduce similarity (try 0.12:0.04)
-**If green outlines visible:** Increase similarity (try 0.18:0.06)
+**If teacher is too transparent:** Lower similarity (try 0.2:0.08)
+**If green outlines visible:** Raise similarity (try 0.3:0.12)
+
+#### Step 4: Add to VIDEO_WORDS
+
+Edit `js/game.js`:
+```javascript
+const VIDEO_WORDS = ['ANT', 'CAT', 'YOUR_WORD'];  // Add your word (uppercase)
+```
+
+#### Step 5: Test
+
+```bash
+open "index.html?words=YOUR_WORD"
+```
 
 ### Quick Reference Commands
 
 ```bash
-# Generate video
-node test-veo.js
+# 1. Generate video (edit prompt first!)
+node test-veo-vertex.js
 
-# Remove green screen (adjust word name)
+# 2. Remove green screen & convert (replace WORD)
 ffmpeg -y -i teacher-veo.mp4 \
-  -vf "chromakey=0x3bba35:0.15:0.05,crop=in_w-20:in_h-20:10:10" \
-  -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 2M \
+  -vf "chromakey=0x00FF00:0.25:0.1" \
+  -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 1M -c:a libopus \
   assets/teacher-videos/spell-WORD.webm
 
-# Preview raw video
-open teacher-veo.mp4
+# 3. Clean up temp file
+rm teacher-veo.mp4
 
-# Test in game
-open index.html
+# 4. Add word to VIDEO_WORDS in js/game.js
+
+# 5. Test in game
+open "index.html?words=WORD"
 ```
 
+### Video Duration
+- **Supported**: 4, 6, or 8 seconds (minimum 4)
+- **Recommended**: 4 seconds for "Spell the word X" videos
+- Set in `test-veo-vertex.js` → `parameters.durationSeconds: 4`
+
 ### Costs
-- **Veo 3.1 Fast**: ~$0.15/second = ~$0.60 per 4-second video
+- **Vertex AI Veo 3.1**: ~$0.15/second = ~$0.60 per 4-second video
+- **No daily limits** (unlike AI Studio's 10/day)
 - 100 words ≈ $60
 
 ### Video Storage
@@ -243,8 +254,8 @@ open index.html
 After creating a video, you must add the word to `VIDEO_WORDS` in `js/game.js`:
 
 ```javascript
-// Near top of game.js
-const VIDEO_WORDS = ['CAT', 'ANT'];  // Add your word here (uppercase)
+// Near top of game.js (line ~175)
+const VIDEO_WORDS = ['ANT', 'CAT'];  // Add your word here (uppercase)
 ```
 
 **How it works:**
@@ -255,17 +266,18 @@ const VIDEO_WORDS = ['CAT', 'ANT'];  // Add your word here (uppercase)
 
 ### Complete Steps to Add a New Word
 
-1. **Edit prompt** in `test-veo.js` - change "cat" to your word
-2. **Run** `node test-veo.js` - generates `teacher-veo.mp4`
-3. **Remove green screen:**
+1. **Edit prompt** in `test-veo-vertex.js` - change word in the prompt string
+2. **Run** `node test-veo-vertex.js` - generates `teacher-veo.mp4` (~60 seconds)
+3. **Remove green screen & convert:**
    ```bash
    ffmpeg -y -i teacher-veo.mp4 \
-     -vf "chromakey=0x3bba35:0.15:0.05,crop=in_w-20:in_h-20:10:10" \
-     -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 2M \
+     -vf "chromakey=0x00FF00:0.25:0.1" \
+     -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 1M -c:a libopus \
      assets/teacher-videos/spell-YOURWORD.webm
    ```
-4. **Add to VIDEO_WORDS** in `js/game.js`
-5. **Test** with `?words=YOURWORD` in URL
+4. **Clean up:** `rm teacher-veo.mp4`
+5. **Add to VIDEO_WORDS** in `js/game.js`
+6. **Test** with `open "index.html?words=YOURWORD"`
 
 ### Prepared Image (Already Done)
 
@@ -292,12 +304,12 @@ new_img.save('teacher-portrait.jpg', 'JPEG', quality=95)
 
 | Problem | Solution |
 |---------|----------|
-| Teacher invisible after chromakey | Lower similarity: `0.12:0.04` |
-| Green outlines visible | Raise similarity: `0.18:0.06` |
-| Green border on edges | Add crop filter |
+| Teacher too transparent | Lower similarity: `chromakey=0x00FF00:0.2:0.08` |
+| Green outlines visible | Raise similarity: `chromakey=0x00FF00:0.3:0.12` |
 | Hands cut off | Add more green padding to sides of source image |
 | Teacher floating (not at bottom) | Put all green padding on TOP of image |
-| Different green shade | Sample actual green from image corner with Python |
+| gcloud auth error | Run `gcloud auth login` |
+| 401 Unauthenticated | Token expired, re-run script (gets fresh token) |
 
 ## External Dependencies
 
