@@ -5,233 +5,146 @@
 
 // =============================================
 // SHARED LISTS (visible to everyone)
-// To add a new list: add it here and push to GitHub
+// Complete word lists from curriculum PDFs
 // =============================================
 const SHARED_LISTS = [
-    // ========== YEAR 2 CORE WORDS ==========
+    // ========== YEAR 2 CORE WORDS (Australian Curriculum) ==========
     {
-        name: "Year 2 - Week 1",
-        words: ["ABOUT", "AFTER", "AGAIN", "ALONG", "ALSO", "ANY"],
-        author: "Year 2"
+        name: "Year 2 Core Words",
+        category: "Year 2",
+        words: [
+            "ABOUT", "AFTER", "AFTERNOON", "ALONG", "ALSO", "AGAIN", "ANY", "ANYONE",
+            "ANYTHING", "ANOTHER", "AROUND", "ASK", "BECAUSE", "BEFORE", "BEST", "BEEN",
+            "BETTER", "BROTHER", "CALLED", "CAME", "CHILDREN", "COMING", "COULD", "CRY",
+            "DEAR", "DOES", "DOING", "DOOR", "EAT", "EVERY", "FACE", "FAST", "FIND",
+            "FIRST", "FOUND", "FRIEND", "GAVE", "GIVE", "GOING", "GONE", "HALF", "HAPPY",
+            "HEAD", "HEAR", "HOUSE", "INSIDE", "KIND", "LETTER", "LIVE", "LUNCH", "LONG",
+            "MADE", "MAKE", "MANY", "MISS", "MORNING", "MR", "MRS", "MYSELF", "NAME",
+            "NEVER", "NEW", "NEXT", "NICE", "NIGHT", "NOW", "OLD", "ONCE", "OPEN", "OUR",
+            "OUT", "PEOPLE", "PLACE", "PRETTY", "READ", "ROAD", "SHOULD", "SISTER",
+            "SOMETHING", "START", "STORY", "THEIR", "THERE", "THESE", "THING", "THINK",
+            "TIME", "TOLD", "TODAY", "TOO", "TWO", "VERY", "WANT", "WATER", "WERE",
+            "WHAT", "WHO", "WOULD", "YEAR", "YOUR"
+        ]
     },
     {
-        name: "Year 2 - Week 2",
-        words: ["BECAUSE", "BEFORE", "BEST", "BEEN", "BETTER", "BROTHER"],
-        author: "Year 2"
+        name: "Year 2 Days of the Week",
+        category: "Year 2",
+        words: ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
     },
     {
-        name: "Year 2 - Week 3",
-        words: ["CALLED", "CAME", "CHILDREN", "COMING", "COULD", "CRY"],
-        author: "Year 2"
+        name: "Year 2 Numbers",
+        category: "Year 2",
+        words: [
+            "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN",
+            "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN",
+            "EIGHTEEN", "NINETEEN", "TWENTY"
+        ]
     },
     {
-        name: "Year 2 - Week 4",
-        words: ["DEAR", "DOES", "DOING", "DOOR", "EAT", "EVERY"],
-        author: "Year 2"
+        name: "Year 2 Months",
+        category: "Year 2",
+        words: [
+            "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
+            "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+        ]
     },
     {
-        name: "Year 2 - Week 5",
-        words: ["FACE", "FAST", "FIND", "FIRST", "FOUND", "FRIEND"],
-        author: "Year 2"
-    },
-    {
-        name: "Year 2 - Week 6",
-        words: ["GAVE", "GIVE", "GOING", "GONE", "HALF", "HAPPY"],
-        author: "Year 2"
-    },
-    {
-        name: "Year 2 - Week 7",
-        words: ["HEAD", "HEAR", "HOUSE", "INSIDE", "KIND", "LETTER"],
-        author: "Year 2"
-    },
-    {
-        name: "Year 2 - Week 8",
-        words: ["LIVE", "LUNCH", "LONG", "MADE", "MAKE", "MANY"],
-        author: "Year 2"
-    },
-    {
-        name: "Year 2 - Week 9",
-        words: ["MORNING", "MYSELF", "NAME", "NEVER", "NEW", "NEXT"],
-        author: "Year 2"
-    },
-    {
-        name: "Year 2 - Week 10",
-        words: ["NICE", "NIGHT", "NOW", "OLD", "ONCE", "OPEN"],
-        author: "Year 2"
-    },
-    {
-        name: "Year 2 - Days of Week",
-        words: ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"],
-        author: "Year 2"
-    },
-    {
-        name: "Year 2 - Weekend + Numbers",
-        words: ["SATURDAY", "SUNDAY", "ONE", "TWO", "THREE", "FOUR", "FIVE"],
-        author: "Year 2"
-    },
-    {
-        name: "Year 2 - Numbers 6-12",
-        words: ["SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE"],
-        author: "Year 2"
-    },
-    {
-        name: "Year 2 - Seasons",
-        words: ["SUMMER", "AUTUMN", "WINTER", "SPRING"],
-        author: "Year 2"
+        name: "Year 2 Seasons",
+        category: "Year 2",
+        words: ["SUMMER", "AUTUMN", "WINTER", "SPRING"]
     },
 
-    // ========== YEAR 3 CORE WORDS ==========
+    // ========== YEAR 3 CORE WORDS (Australian Curriculum) ==========
     {
-        name: "Year 3 - Week 1",
-        words: ["ABLE", "ACROSS", "AGAINST", "AIR", "ALONG", "ALREADY"],
-        author: "Year 3"
-    },
-    {
-        name: "Year 3 - Week 2",
-        words: ["ANIMAL", "ANYTHING", "ASLEEP", "AUSTRALIA", "BEAUTIFUL", "BIRD"],
-        author: "Year 3"
-    },
-    {
-        name: "Year 3 - Week 3",
-        words: ["BOOK", "BOX", "BROUGHT", "CITY", "CLOTHES", "COLD"],
-        author: "Year 3"
-    },
-    {
-        name: "Year 3 - Week 4",
-        words: ["COLOUR", "CORNER", "DIFFERENT", "DOLLARS", "DURING", "EARLY"],
-        author: "Year 3"
-    },
-    {
-        name: "Year 3 - Week 5",
-        words: ["EVEN", "EVERYBODY", "EVERYTHING", "FEET", "FELT", "FINALLY"],
-        author: "Year 3"
-    },
-    {
-        name: "Year 3 - Week 6",
-        words: ["FLOOR", "GAMES", "GOES", "HAIR", "HARD", "HELLO"],
-        author: "Year 3"
-    },
-    {
-        name: "Year 3 - Week 7",
-        words: ["HIGH", "LARGE", "LEAVE", "LIGHT", "NOTHING", "OWN"],
-        author: "Year 3"
-    },
-    {
-        name: "Year 3 - Week 8",
-        words: ["PACKED", "PARENTS", "PEOPLE", "PERSON", "QUICKLY", "RAIN"],
-        author: "Year 3"
-    },
-    {
-        name: "Year 3 - Week 9",
-        words: ["RING", "SEEN", "SENT", "SHOULD", "SHOW", "SIDE"],
-        author: "Year 3"
-    },
-    {
-        name: "Year 3 - Week 10",
-        words: ["SLEPT", "SLOWLY", "SOMEONE", "SPACE", "STATION", "STAY"],
-        author: "Year 3"
+        name: "Year 3 Core Words",
+        category: "Year 3",
+        words: [
+            "ABLE", "ACROSS", "AGAINST", "AIR", "ALONG", "ALREADY", "ANIMAL", "ANYTHING",
+            "ASLEEP", "AUSTRALIA", "BEAUTIFUL", "BIRD", "BOOK", "BOX", "BROUGHT", "CITY",
+            "CLOTHES", "COLD", "COLOUR", "CORNER", "DIED", "DIFFERENT", "DOLLARS", "DURING",
+            "EARLY", "EVEN", "EVERYBODY", "EVERYTHING", "FEET", "FELT", "FINALLY", "FLOOR",
+            "GAMES", "GOES", "HAIR", "HARD", "HELLO", "HIGH", "LARGE", "LEAVE", "LIGHT",
+            "NOTHING", "OWN", "PACKED", "PARENTS", "PEOPLE", "PERSON", "QUICKLY", "RAIN",
+            "RING", "SEEN", "SENT", "SHOULD", "SHOW", "SIDE", "SLEPT", "SLOWLY", "SOMEONE",
+            "SPACE", "STATION", "STAY", "STRAIGHT", "STRANGE", "STREET", "SUDDEN", "SURE",
+            "TALK", "TELEVISION", "THAN", "TOWN", "TRAIN", "TRY", "USED", "VOICE", "WATCH",
+            "WEEKS", "WON", "WRITE"
+        ]
     },
 
     // ========== DOLCH SIGHT WORDS ==========
     {
-        name: "Dolch - Pre-K Set 1",
-        words: ["AND", "AWAY", "BIG", "BLUE", "CAN", "COME"],
-        author: "Dolch"
+        name: "Dolch Pre-Kindergarten",
+        category: "Dolch",
+        words: [
+            "A", "AND", "AWAY", "BIG", "BLUE", "CAN", "COME", "DOWN", "FIND", "FOR",
+            "FUNNY", "GO", "HELP", "HERE", "I", "IN", "IS", "IT", "JUMP", "LITTLE",
+            "LOOK", "MAKE", "ME", "MY", "NOT", "ONE", "PLAY", "RED", "RUN", "SAID",
+            "SEE", "THE", "THREE", "TO", "TWO", "UP", "WE", "WHERE", "YELLOW", "YOU"
+        ]
     },
     {
-        name: "Dolch - Pre-K Set 2",
-        words: ["DOWN", "FIND", "FOR", "FUNNY", "GO", "HELP"],
-        author: "Dolch"
+        name: "Dolch Kindergarten",
+        category: "Dolch",
+        words: [
+            "ALL", "AM", "ARE", "AT", "ATE", "BE", "BLACK", "BROWN", "BUT", "CAME",
+            "DID", "DO", "EAT", "FOUR", "GET", "GOOD", "HAVE", "HE", "INTO", "LIKE",
+            "MUST", "NEW", "NO", "NOW", "ON", "OUR", "OUT", "PLEASE", "PRETTY", "RAN",
+            "RIDE", "SAW", "SAY", "SHE", "SO", "SOON", "THAT", "THERE", "THEY", "THIS",
+            "TOO", "UNDER", "WANT", "WAS", "WELL", "WENT", "WHAT", "WHITE", "WHO",
+            "WILL", "WITH", "YES"
+        ]
     },
     {
-        name: "Dolch - Pre-K Set 3",
-        words: ["HERE", "IN", "IS", "IT", "JUMP", "LITTLE"],
-        author: "Dolch"
+        name: "Dolch First Grade",
+        category: "Dolch",
+        words: [
+            "AFTER", "AGAIN", "AN", "ANY", "AS", "ASK", "BY", "COULD", "EVERY", "FLY",
+            "FROM", "GIVE", "GOING", "HAD", "HAS", "HER", "HIM", "HIS", "HOW", "JUST",
+            "KNOW", "LET", "LIVE", "MAY", "OF", "OLD", "ONCE", "OPEN", "OVER", "PUT",
+            "ROUND", "SOME", "STOP", "TAKE", "THANK", "THEM", "THEN", "THINK", "WALK",
+            "WERE", "WHEN"
+        ]
     },
     {
-        name: "Dolch - Pre-K Set 4",
-        words: ["LOOK", "MAKE", "ME", "MY", "NOT", "ONE"],
-        author: "Dolch"
+        name: "Dolch Second Grade",
+        category: "Dolch",
+        words: [
+            "ALWAYS", "AROUND", "BECAUSE", "BEEN", "BEFORE", "BEST", "BOTH", "BUY",
+            "CALL", "COLD", "DOES", "FAST", "FIRST", "FIVE", "FOUND", "GAVE", "GOES",
+            "GREEN", "ITS", "MADE", "MANY", "OFF", "OR", "PULL", "READ", "RIGHT", "SING",
+            "SIT", "SLEEP", "TELL", "THEIR", "THESE", "THOSE", "UPON", "US", "USE",
+            "VERY", "WASH", "WHICH", "WHY", "WISH", "WORK", "WOULD", "WRITE", "YOUR"
+        ]
     },
     {
-        name: "Dolch - Pre-K Set 5",
-        words: ["PLAY", "RED", "RUN", "SAID", "SEE", "THE"],
-        author: "Dolch"
+        name: "Dolch Third Grade",
+        category: "Dolch",
+        words: [
+            "ABOUT", "BETTER", "BRING", "CARRY", "CLEAN", "CUT", "DONE", "DRAW", "DRINK",
+            "EIGHT", "FALL", "FAR", "FULL", "GOT", "GROW", "HOLD", "HOT", "HURT", "IF",
+            "KEEP", "KIND", "LAUGH", "LIGHT", "LONG", "MUCH", "MYSELF", "NEVER", "ONLY",
+            "OWN", "PICK", "SEVEN", "SHALL", "SHOW", "SIX", "SMALL", "START", "TEN",
+            "TODAY", "TOGETHER", "TRY", "WARM"
+        ]
     },
     {
-        name: "Dolch - Kindergarten 1",
-        words: ["ALL", "AM", "ARE", "AT", "ATE", "BE"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Kindergarten 2",
-        words: ["BLACK", "BROWN", "BUT", "CAME", "DID", "DO"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Kindergarten 3",
-        words: ["EAT", "FOUR", "GET", "GOOD", "HAVE", "HE"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Kindergarten 4",
-        words: ["INTO", "LIKE", "MUST", "NEW", "NO", "NOW"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Kindergarten 5",
-        words: ["ON", "OUR", "OUT", "PLEASE", "PRETTY", "RAN"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Grade 1 Set 1",
-        words: ["AFTER", "AGAIN", "AN", "ANY", "AS", "ASK"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Grade 1 Set 2",
-        words: ["BY", "COULD", "EVERY", "FLY", "FROM", "GIVE"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Grade 1 Set 3",
-        words: ["GOING", "HAD", "HAS", "HER", "HIM", "HIS"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Grade 2 Set 1",
-        words: ["ALWAYS", "AROUND", "BECAUSE", "BEEN", "BEFORE", "BEST"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Grade 2 Set 2",
-        words: ["BOTH", "BUY", "CALL", "COLD", "DOES", "FAST"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Grade 2 Set 3",
-        words: ["FIRST", "FIVE", "FOUND", "GAVE", "GOES", "GREEN"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Nouns Animals",
-        words: ["CAT", "DOG", "PIG", "FISH", "BIRD", "DUCK"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Nouns Home",
-        words: ["BED", "DOOR", "TABLE", "CHAIR", "FLOOR", "WINDOW"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Nouns Nature",
-        words: ["SUN", "TREE", "RAIN", "SNOW", "GRASS", "FLOWER"],
-        author: "Dolch"
-    },
-    {
-        name: "Dolch - Nouns Family",
-        words: ["MOTHER", "FATHER", "SISTER", "BROTHER", "BABY", "BOY", "GIRL"],
-        author: "Dolch"
+        name: "Dolch Nouns",
+        category: "Dolch",
+        words: [
+            "APPLE", "BABY", "BACK", "BALL", "BEAR", "BED", "BELL", "BIRD", "BIRTHDAY",
+            "BOAT", "BOX", "BOY", "BREAD", "BROTHER", "CAKE", "CAR", "CAT", "CHAIR",
+            "CHICKEN", "CHILDREN", "CHRISTMAS", "COAT", "CORN", "COW", "DAY", "DOG",
+            "DOLL", "DOOR", "DUCK", "EGG", "EYE", "FARM", "FARMER", "FATHER", "FEET",
+            "FIRE", "FISH", "FLOOR", "FLOWER", "GAME", "GARDEN", "GIRL", "GOODBYE",
+            "GRASS", "GROUND", "HAND", "HEAD", "HILL", "HOME", "HORSE", "HOUSE", "KITTY",
+            "LEG", "LETTER", "MAN", "MEN", "MILK", "MONEY", "MORNING", "MOTHER", "NAME",
+            "NEST", "NIGHT", "PAPER", "PARTY", "PICTURE", "PIG", "RABBIT", "RAIN", "RING",
+            "ROBIN", "SCHOOL", "SEED", "SHEEP", "SHOE", "SISTER", "SNOW", "SONG",
+            "SQUIRREL", "STICK", "STREET", "SUN", "TABLE", "THING", "TIME", "TOP", "TOY",
+            "TREE", "WATCH", "WATER", "WAY", "WIND", "WINDOW", "WOOD"
+        ]
     }
 ];
 
@@ -428,6 +341,10 @@ function openGame() {
     window.open(linkInput.value, '_blank');
 }
 
+// State for expanded list
+let expandedListIndex = null;
+let listSelectedWords = new Set();
+
 // =============================================
 // SHARED LISTS (Pre-made, visible to everyone)
 // =============================================
@@ -437,43 +354,98 @@ function renderSharedLists() {
 
     const filteredLists = currentFilter === 'all'
         ? SHARED_LISTS
-        : SHARED_LISTS.filter(list => list.author === currentFilter);
+        : SHARED_LISTS.filter(list => list.category === currentFilter);
 
-    container.innerHTML = filteredLists.map((list, index) => {
+    container.innerHTML = filteredLists.map((list) => {
         const originalIndex = SHARED_LISTS.indexOf(list);
+        const isExpanded = expandedListIndex === originalIndex;
+
         return `
-        <div class="saved-list-item shared-item" data-index="${originalIndex}">
-            <div class="list-info">
-                <span class="list-name">${list.name}</span>
-                <span class="list-count">${list.words.length} words</span>
+        <div class="shared-list-item ${isExpanded ? 'expanded' : ''}" data-index="${originalIndex}">
+            <div class="list-header" onclick="toggleListExpand(${originalIndex})">
+                <div class="list-info">
+                    <span class="expand-icon">${isExpanded ? '▼' : '▶'}</span>
+                    <span class="list-name">${list.name}</span>
+                    <span class="list-count">${list.words.length} words</span>
+                </div>
+                <div class="list-quick-actions">
+                    <button class="list-btn play-btn" onclick="event.stopPropagation(); playSharedList(${originalIndex})" title="Play all words">
+                        🎮 Play All
+                    </button>
+                </div>
             </div>
-            <div class="list-words">${list.words.join(', ')}</div>
-            <div class="list-actions">
-                <button class="list-btn load-btn" onclick="loadSharedList(${originalIndex})" title="Load this list">
-                    Load
-                </button>
-                <button class="list-btn play-btn" onclick="playSharedList(${originalIndex})" title="Play now">
-                    🎮 Play
-                </button>
-            </div>
+            ${isExpanded ? renderExpandedList(list, originalIndex) : ''}
         </div>
     `}).join('');
 }
 
-function setupFilterButtons() {
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentFilter = btn.dataset.filter;
-            renderSharedLists();
-        });
-    });
+function renderExpandedList(list, index) {
+    const wordsHtml = list.words.map(word => {
+        const isSelected = listSelectedWords.has(word);
+        const hasLottie = LOTTIE_WORDS.some(l => l.word === word);
+        return `
+            <label class="list-word-checkbox ${isSelected ? 'selected' : ''}" onclick="event.stopPropagation()">
+                <input type="checkbox" value="${word}" ${isSelected ? 'checked' : ''}
+                       onchange="toggleListWord('${word}', this.checked)">
+                <span class="word-label">${word}</span>
+                ${hasLottie ? '<span class="has-anim">✨</span>' : '<span class="has-tts">🔊</span>'}
+            </label>
+        `;
+    }).join('');
+
+    const selectedCount = listSelectedWords.size;
+
+    return `
+        <div class="list-expanded-content" onclick="event.stopPropagation()">
+            <div class="list-select-actions">
+                <button class="select-action-btn" onclick="selectAllListWords(${index})">Select All</button>
+                <button class="select-action-btn" onclick="deselectAllListWords()">Deselect All</button>
+                <span class="selected-info">${selectedCount} selected</span>
+            </div>
+            <div class="list-words-grid">
+                ${wordsHtml}
+            </div>
+            <div class="list-use-actions">
+                <button class="use-selected-btn" onclick="useSelectedWords()" ${selectedCount === 0 ? 'disabled' : ''}>
+                    Use ${selectedCount} Selected Words
+                </button>
+            </div>
+        </div>
+    `;
 }
 
-function loadSharedList(index) {
+function toggleListExpand(index) {
+    if (expandedListIndex === index) {
+        expandedListIndex = null;
+    } else {
+        expandedListIndex = index;
+        listSelectedWords.clear();
+    }
+    renderSharedLists();
+}
+
+function toggleListWord(word, isChecked) {
+    if (isChecked) {
+        listSelectedWords.add(word);
+    } else {
+        listSelectedWords.delete(word);
+    }
+    renderSharedLists();
+}
+
+function selectAllListWords(index) {
     const list = SHARED_LISTS[index];
-    if (!list) return;
+    list.words.forEach(word => listSelectedWords.add(word));
+    renderSharedLists();
+}
+
+function deselectAllListWords() {
+    listSelectedWords.clear();
+    renderSharedLists();
+}
+
+function useSelectedWords() {
+    if (listSelectedWords.size === 0) return;
 
     // Clear current selections
     selectedWords.clear();
@@ -483,8 +455,8 @@ function loadSharedList(index) {
         label.classList.remove('selected');
     });
 
-    // Load Lottie words
-    list.words.forEach(word => {
+    // Load selected words
+    listSelectedWords.forEach(word => {
         const lottieWord = LOTTIE_WORDS.find(l => l.word === word);
         if (lottieWord) {
             selectedWords.add(word);
@@ -496,8 +468,8 @@ function loadSharedList(index) {
         }
     });
 
-    // Load custom words
-    const customWordsList = list.words.filter(w => !LOTTIE_WORDS.some(l => l.word === w));
+    // Load custom words (those without Lottie)
+    const customWordsList = [...listSelectedWords].filter(w => !LOTTIE_WORDS.some(l => l.word === w));
     document.getElementById('custom-words-input').value = customWordsList.join(', ');
     customWords = customWordsList;
 
@@ -515,8 +487,24 @@ function loadSharedList(index) {
 
     updateSelectedCount();
 
-    // Scroll to top
+    // Collapse the list and scroll to top
+    expandedListIndex = null;
+    listSelectedWords.clear();
+    renderSharedLists();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setupFilterButtons() {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.filter;
+            expandedListIndex = null;
+            listSelectedWords.clear();
+            renderSharedLists();
+        });
+    });
 }
 
 function playSharedList(index) {
