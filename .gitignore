@@ -11,9 +11,9 @@ test-audio.mp3
 teacher-test.mp4
 teacher-veo.mp4
 
-# Generated videos
+# Generated videos (keep raw MP4s in assets folder)
 *.mp4
-!assets/*.mp4
+!assets/**/*.mp4
 
 # OS files
 .DS_Store
