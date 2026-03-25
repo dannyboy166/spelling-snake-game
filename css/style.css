@@ -1042,6 +1042,12 @@ body {
     display: block;
 }
 
+#character-canvas {
+    height: clamp(150px, 30vh, 250px);
+    width: auto;
+    display: block;
+}
+
 .tap-hint {
     position: absolute;
     top: 10px;

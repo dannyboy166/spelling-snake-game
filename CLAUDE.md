@@ -139,114 +139,98 @@ For SASCO portal integration:
 
 ## AI Teacher Character (Video Generation)
 
-The game features an animated teacher character that says "Spell the word X" using AI-generated lip-sync videos.
+The game features an animated teacher character that says "Spell the word X" using AI-generated lip-sync videos with **live WebGL green screen removal** (works on all browsers including Safari/iOS).
 
-### One-Command Video Generation
-
-```bash
-node generate-teacher-video.js WORD
-```
-
-This single command does everything:
-1. Generates video with Vertex AI Veo 3.1 (~45 seconds)
-2. Saves raw MP4 (with green screen) locally
-3. Removes green screen → transparent WebM
-4. Uploads raw MP4 to Google Drive
-5. Uploads processed WebM to Google Drive
-6. Updates `VIDEO_WORDS` in game.js automatically
-
-**Example:**
-```bash
-node generate-teacher-video.js ELEPHANT
-# ~65 seconds later: video ready, uploaded, and registered!
-```
-
-### Technology Stack
-- **Google Vertex AI Veo 3.1** - Image-to-video with lip-sync (~$0.60 per 4-second video, NO daily limits)
-- **ffmpeg chromakey** - Green screen removal with alpha transparency
-- **Google Drive API** - Automatic backup of all videos
-- **WebM VP9** - Output format with alpha channel support
-
-### Prerequisites (One-time Setup)
-
-1. **Google Cloud Project**: `sasco-project`
-2. **gcloud CLI**: `brew install google-cloud-sdk`
-3. **Authenticate for Vertex AI**:
-   ```bash
-   /opt/homebrew/share/google-cloud-sdk/bin/gcloud auth login
-   ```
-4. **Authenticate for Google Drive**:
-   ```bash
-   /opt/homebrew/share/google-cloud-sdk/bin/gcloud auth application-default login \
-     --scopes="https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/drive.file"
-   ```
-5. **APIs enabled**: Vertex AI API, Google Drive API
-
-### File Outputs
-
-For each word, the script creates:
-
-| File | Location | Description |
-|------|----------|-------------|
-| `spell-{word}-raw.mp4` | `assets/teacher-videos/` | Original with green screen |
-| `spell-{word}.webm` | `assets/teacher-videos/` | Transparent background |
-| Both files | Google Drive | Backed up to shared folder |
-
-### Video Settings
-- **Duration**: 4 seconds (minimum supported by Veo)
-- **Aspect Ratio**: 9:16 (vertical/portrait)
-- **Chromakey**: `0x00FF00:0.25:0.1` (green removal settings)
-
-### Costs
-- **Vertex AI Veo 3.1**: ~$0.15/second = ~$0.60 per 4-second video
-- **No daily limits** (unlike AI Studio's 10/day)
-- 100 words ≈ $60
-
-### How Videos Work in the Game
-
-Videos are controlled by `VIDEO_WORDS` array in `js/game.js`:
+### Current Demo Words (6 words for DoE demo)
 
 ```javascript
-const VIDEO_WORDS = ['ANT', 'BUS', 'CAT', 'DOG', 'FISH', 'GOAT', 'PIG'];
+const VIDEO_WORDS = ['CAT', 'DOG', 'FISH', 'GOAT', 'SNAKE', 'SUN'];
 ```
 
-- Teacher video **only appears** for words in this list
-- Video **auto-plays** when a word starts
-- For words **without** videos, no teacher appears
-- The automation script **updates this list automatically**
+These 6 words were created with HeyGen for the Department of Education demo. The game currently rotates through only these words.
 
-### Source Files
-- `teacher-portrait.jpg` - Prepared 9:16 image for Veo (green screen background)
-- `generate-teacher-video.js` - **Main automation script** (use this!)
-- `test-veo-vertex.js` - Manual testing script (for debugging)
+### How It Works
 
-### Google Drive Backup
-- **Folder ID**: `1Q23m9itexQBMdzbMTKmDpk8Dzh-AUzxF`
-- All videos automatically uploaded when generated
-- Both raw MP4 and processed WebM versions saved
+1. **HeyGen** generates videos with green screen background
+2. **MP4 files** stored in `assets/teacher-videos/spell-{word}.mp4`
+3. **WebGL shader** removes green screen in real-time as video plays
+4. **Works everywhere** - Chrome, Firefox, Safari, iOS, Android
 
-### Troubleshooting
+### Technology Stack
+- **HeyGen** - AI avatar video generation with lip-sync
+- **WebGL chromakey shader** - Live green screen removal in browser
+- **HTML5 Canvas** - Renders transparent video output
 
-| Problem | Solution |
-|---------|----------|
-| Teacher too transparent | Edit chromakey in script: `0.2:0.08` |
-| Green outlines visible | Edit chromakey in script: `0.3:0.12` |
-| gcloud auth error | Run `gcloud auth login` |
-| Drive upload fails | Run the application-default login command above |
-| 401 Unauthenticated | Token expired, re-run script (gets fresh token) |
+### Adding New Words
 
-### Manual Chromakey (if needed)
+**Step 1: Create video in HeyGen**
+- Use green screen background
+- Script: "Spell the word [WORD]"
+- Export as MP4 (one video per word, or use scenes)
 
-If you need to manually process a video:
+**Step 2: Add MP4 to project**
 ```bash
-ffmpeg -y -i input.mp4 \
-  -vf "chromakey=0x00FF00:0.25:0.1" \
-  -c:v libvpx-vp9 \
-  -pix_fmt yuva420p \
-  -b:v 1M \
-  -c:a libopus \
-  output.webm
+# Name format: spell-{word}.mp4 (lowercase)
+cp your-video.mp4 assets/teacher-videos/spell-elephant.mp4
 ```
+
+**Step 3: Update VIDEO_WORDS in game.js**
+```javascript
+const VIDEO_WORDS = ['CAT', 'DOG', 'FISH', 'GOAT', 'SNAKE', 'SUN', 'ELEPHANT'];
+```
+
+**Step 4: Add word to ANIMALS array in animals.js**
+```javascript
+{ word: 'ELEPHANT', emoji: '🐘', scale: 2.16, offsetY: 10 },
+```
+
+### File Structure
+
+```
+assets/teacher-videos/
+├── spell-cat.mp4      # Green screen MP4 from HeyGen
+├── spell-dog.mp4
+├── spell-fish.mp4
+├── spell-goat.mp4
+├── spell-snake.mp4
+└── spell-sun.mp4
+```
+
+### WebGL Chromakey Shader
+
+The green screen removal happens live in `js/game.js`:
+
+```javascript
+// Fragment shader detects green pixels and makes them transparent
+float greenDiff = color.g - max(color.r, color.b);
+if (greenDiff > 0.15 && color.g > 0.4) {
+    discard; // Make green pixels transparent
+}
+```
+
+**Tuning the chromakey** (in game.js `initChromakey` function):
+- `threshold = 0.15` - Higher = more aggressive green removal
+- `color.g > 0.4` - Minimum green intensity to remove
+
+### Teacher Visibility
+
+- **Hidden** on main menu and game over screens
+- **Appears** when a word with video starts
+- **"Tap me"** hint shows after video ends (for replay)
+- Video auto-plays when word starts
+
+### Running Locally
+
+**Important:** WebGL video textures require a local server (not `file://` URLs):
+
+```bash
+npx serve
+# Then open http://localhost:3000
+```
+
+### Legacy: Vertex AI Veo (Alternative)
+
+For automated video generation without HeyGen, see `generate-teacher-video.js` which uses Google Vertex AI Veo 3.1 (~$0.60 per video). Requires gcloud authentication.
 
 ## External Dependencies
 

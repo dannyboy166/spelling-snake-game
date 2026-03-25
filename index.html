@@ -211,9 +211,10 @@
 
     <!-- Tappable character video - fixed to bottom of screen -->
     <div class="character-video-container" id="character-container">
-        <video class="character-video" id="character-video" playsinline preload="auto">
-            <source src="assets/teacher-videos/spell-cat.webm" type="video/webm">
+        <video id="character-video" playsinline preload="auto" style="display:none;">
+            <source src="assets/teacher-videos/spell-cat.mp4" type="video/mp4">
         </video>
+        <canvas class="character-video" id="character-canvas"></canvas>
         <div class="tap-hint" id="tap-hint">Tap me!</div>
     </div>
 

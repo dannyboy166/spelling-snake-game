@@ -172,7 +172,161 @@ const game = {
 // Words that have pre-generated teacher videos saying "Spell the word X"
 // Add words here as you generate videos with test-veo.js
 // Videos must be at: assets/teacher-videos/spell-{word}.webm (lowercase)
-const VIDEO_WORDS = ['ANT', 'BUS', 'CAT', 'DOG', 'FISH', 'GOAT', 'PIG'];  // Words with pre-generated teacher videos
+const VIDEO_WORDS = ['CAT', 'DOG', 'FISH', 'GOAT', 'SNAKE', 'SUN'];  // Words with HeyGen teacher videos
+
+// =============================================
+// WEBGL CHROMAKEY (Green Screen Removal)
+// =============================================
+// Removes green background from teacher videos in real-time
+// Works on all browsers including Safari/iOS
+
+let chromakeyGL = null;
+let chromakeyAnimationId = null;
+
+function initChromakey() {
+    const canvas = document.getElementById('character-canvas');
+    const video = document.getElementById('character-video');
+    if (!canvas || !video) return;
+
+    const gl = canvas.getContext('webgl', { premultipliedAlpha: false, alpha: true });
+    if (!gl) {
+        console.warn('WebGL not supported');
+        // Show video directly as fallback
+        video.style.display = 'block';
+        canvas.style.display = 'none';
+        return;
+    }
+
+    // Vertex shader
+    const vsSource = `
+        attribute vec2 a_position;
+        attribute vec2 a_texCoord;
+        varying vec2 v_texCoord;
+        void main() {
+            gl_Position = vec4(a_position, 0.0, 1.0);
+            v_texCoord = a_texCoord;
+        }
+    `;
+
+    // Fragment shader with chromakey
+    const fsSource = `
+        precision mediump float;
+        uniform sampler2D u_image;
+        varying vec2 v_texCoord;
+        void main() {
+            vec4 color = texture2D(u_image, v_texCoord);
+            // Green screen detection
+            float greenDiff = color.g - max(color.r, color.b);
+            float threshold = 0.15;
+            if (greenDiff > threshold && color.g > 0.4) {
+                discard; // Make green pixels transparent
+            }
+            gl_FragColor = color;
+        }
+    `;
+
+    // Compile shaders
+    function compileShader(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        return shader;
+    }
+
+    const vs = compileShader(gl.VERTEX_SHADER, vsSource);
+    const fs = compileShader(gl.FRAGMENT_SHADER, fsSource);
+
+    const program = gl.createProgram();
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    // Set up geometry (full-screen quad)
+    const positions = new Float32Array([-1,-1, 1,-1, -1,1, 1,1]);
+    const texCoords = new Float32Array([0,1, 1,1, 0,0, 1,0]);
+
+    const posBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+    const posLoc = gl.getAttribLocation(program, 'a_position');
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+    const texBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, texBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, texCoords, gl.STATIC_DRAW);
+    const texLoc = gl.getAttribLocation(program, 'a_texCoord');
+    gl.enableVertexAttribArray(texLoc);
+    gl.vertexAttribPointer(texLoc, 2, gl.FLOAT, false, 0, 0);
+
+    // Create texture
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+    // Set initial canvas size
+    canvas.width = 1920;
+    canvas.height = 1080;
+    gl.viewport(0, 0, 1920, 1080);
+
+    chromakeyGL = { gl, canvas, video, texture };
+
+    // Start render loop when video plays
+    video.addEventListener('playing', () => {
+        startChromakeyRender();
+    });
+}
+
+function startChromakeyRender() {
+    if (!chromakeyGL) return;
+    const { gl, canvas, video, texture } = chromakeyGL;
+
+    function render() {
+        // Keep rendering even if paused (shows last frame)
+        if (video.ended) {
+            chromakeyAnimationId = null;
+            return;
+        }
+
+        // Match canvas size to video once we have dimensions
+        if (video.videoWidth > 0 && video.videoHeight > 0) {
+            if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                gl.viewport(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        // Only upload if video has data
+        if (video.readyState >= 2) {
+            // Upload video frame to texture
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+
+            // Clear and draw
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        }
+
+        chromakeyAnimationId = requestAnimationFrame(render);
+    }
+
+    // Start rendering
+    if (chromakeyAnimationId) cancelAnimationFrame(chromakeyAnimationId);
+    chromakeyAnimationId = requestAnimationFrame(render);
+}
+
+function stopChromakeyRender() {
+    if (chromakeyAnimationId) {
+        cancelAnimationFrame(chromakeyAnimationId);
+        chromakeyAnimationId = null;
+    }
+}
 
 // =============================================
 // CUSTOM WORD LIST (URL PARAMS - TEACHER PORTAL)
@@ -609,6 +763,11 @@ function gameOver() {
 }
 
 function showGameOverScreen() {
+    // Hide teacher video
+    const characterContainer = document.getElementById('character-container');
+    if (characterContainer) characterContainer.style.display = 'none';
+    stopChromakeyRender();
+
     // Stop flashing on missed letters
     document.querySelectorAll('.letter-box.missed').forEach(box => {
         box.classList.remove('missed');
@@ -643,6 +802,11 @@ function showGameOverScreen() {
 }
 
 function showAllAnimalsComplete() {
+    // Hide teacher video
+    const characterContainer = document.getElementById('character-container');
+    if (characterContainer) characterContainer.style.display = 'none';
+    stopChromakeyRender();
+
     // Stop the game
     game.isPlaying = false;
     clearInterval(game.gameLoop);
@@ -1249,15 +1413,22 @@ function updateAnimalDisplay() {
     const video = document.getElementById('character-video');
     if (videoContainer && video) {
         if (game.currentAnimal.hasVideo) {
-            // Update video source and show
-            video.src = `assets/teacher-videos/spell-${word.toLowerCase()}.webm`;
+            // Initialize chromakey if not already done
+            if (!chromakeyGL) initChromakey();
+
+            // Update video source (MP4 with green screen)
+            video.src = `assets/teacher-videos/spell-${word.toLowerCase()}.mp4`;
             video.load();
             videoContainer.style.display = 'block';
-            // Auto-play the video
+
+            // Auto-play the video and start chromakey render
             video.currentTime = 0;
-            video.play().catch(() => {}); // Ignore autoplay errors
+            video.play().then(() => {
+                startChromakeyRender();
+            }).catch(() => {}); // Ignore autoplay errors
         } else {
             // Hide video for words without teacher video
+            stopChromakeyRender();
             videoContainer.style.display = 'none';
         }
     }
@@ -1681,6 +1852,9 @@ window.addEventListener('DOMContentLoaded', () => {
     init();
     initLottieAnimations();
     initCharacterVideo();
+    // Hide teacher until game starts
+    const characterContainer = document.getElementById('character-container');
+    if (characterContainer) characterContainer.style.display = 'none';
     requestAnimationFrame(smoothRenderLoop); // Start smooth render loop
 });
 
@@ -1692,21 +1866,33 @@ function initCharacterVideo() {
 
     if (!container || !video) return;
 
+    // Initialize chromakey
+    initChromakey();
+
+    // Hide tap hint initially
+    if (tapHint) tapHint.classList.add('hidden');
+
+    // Show tap hint when video ends
+    video.addEventListener('ended', () => {
+        if (tapHint) tapHint.classList.remove('hidden');
+    });
+
+    // Hide tap hint when video starts playing
+    video.addEventListener('playing', () => {
+        if (tapHint) tapHint.classList.add('hidden');
+    });
+
     // Play video on tap/click
     container.addEventListener('click', () => {
-        // Hide the hint after first tap
-        if (tapHint) tapHint.classList.add('hidden');
-
-        // Reset and play
+        // Reset and play with chromakey
         video.currentTime = 0;
-        video.play();
+        video.play().then(() => startChromakeyRender()).catch(() => {});
     });
 
     // Also allow touch
     container.addEventListener('touchend', (e) => {
         e.preventDefault();
-        if (tapHint) tapHint.classList.add('hidden');
         video.currentTime = 0;
-        video.play();
+        video.play().then(() => startChromakeyRender()).catch(() => {});
     });
 }
